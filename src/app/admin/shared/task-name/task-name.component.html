@@ -1,0 +1,16 @@
+<div *ngIf="nameEditing" class="task-name-editor">
+    <mat-form-field  floatLabel="never">
+        <input matInput [formControl]="nameCtrl" placeholder="Type name here..."
+            (keydown.enter)="applyNameEdit($event)"
+            (keydown.escape)="cancelNameEdit($event)"
+            (keydown.space)="$event.stopPropagation()"
+            autofocus />
+            <mat-error>Name required</mat-error>
+    </mat-form-field>
+    <mat-icon (click)="applyNameEdit($event)">done</mat-icon>
+    <mat-icon (click)="cancelNameEdit($event)">clear</mat-icon>
+</div>
+<div *ngIf="!nameEditing" class="task-name-viewer" (click)="nameEditing=true">
+    {{taskInfo?.name}}
+    <mat-icon class="edit-icon">edit</mat-icon>
+</div>

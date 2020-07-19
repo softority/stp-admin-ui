@@ -1,0 +1,15 @@
+<mat-menu #appMenu="matMenu">
+    <ng-template matMenuContent let-menuItems="items">
+        <button mat-menu-item *ngFor="let item of menuItems" (click)="handleMenuAction(item.action)">
+            {{item.name}}
+        </button>        
+    </ng-template>
+</mat-menu>
+
+<!-- <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Sally'}">
+    <mat-icon>more_vert</mat-icon>
+</button>
+
+<button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Bob'}">
+    <mat-icon>more_vert</mat-icon>
+</button> -->

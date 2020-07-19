@@ -1,0 +1,16 @@
+<mat-drawer-container class="container">
+    <mat-drawer mode="side" opened >
+
+        <stp-tests-tree></stp-tests-tree>
+    </mat-drawer>
+    <mat-drawer-content>
+    <router-outlet></router-outlet>    
+    </mat-drawer-content>
+</mat-drawer-container>
+<!-- 
+<stp-dynamic-menu #dm="dynamic-menu"></stp-dynamic-menu>
+<div style="visibility: hidden; position: fixed"
+    [style.left]="contextMenuPosition.x"
+    [style.top]="contextMenuPosition.y"
+    [matMenuTriggerFor]="dm.menu">
+</div> -->

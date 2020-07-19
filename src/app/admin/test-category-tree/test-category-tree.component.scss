@@ -1,0 +1,29 @@
+:host{
+    height: 100%;
+  }
+  
+  .type-icon {
+    color: lightblue;
+    margin-right: 5px;
+  }
+  
+  mat-tree {
+    cursor: default;
+  }
+  mat-tree-node > div{ 
+   
+      display: contents;
+    
+  }
+  // button {
+  //   color: blue;
+  // }
+  mat-tree-node:active {
+    //background-color: lightblue;
+    font-weight: bold;
+  }
+  
+  .selected {
+    font-weight: bold;
+  }
+  

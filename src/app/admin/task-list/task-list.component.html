@@ -1,0 +1,34 @@
+
+<mat-progress-bar *ngIf="loading" mode="buffer"></mat-progress-bar>
+
+<stp-expansion-panel-list *ngIf="!loading" (itemDropped)="moveTask($event)" [contentTemplate]="content" [headerTemplate]="header"
+    [items]="tasksVm">
+</stp-expansion-panel-list>
+
+<ng-template #header let-data="header">
+    <div class="header-container">
+        <div>
+            <!-- <div class="drag-handle-and-task-type">
+                <span class="task-drag-handle" cdkDragHandle>
+                    <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                        </path>
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                </span>
+                <mat-chip class="task-type">{{data.type}}</mat-chip>
+            </div> -->
+            <mat-chip class="task-type">{{data.type}}</mat-chip>
+            <stp-task-metrics [taskInfo]="data"></stp-task-metrics>
+        </div>
+        <stp-task-name [taskInfo]="data"></stp-task-name>
+        <stp-skills-chips [skills]="data.skills"></stp-skills-chips>
+    </div>
+</ng-template>
+
+<ng-template #content let-data="content">
+    <div class="content-container">
+        <stp-multichoice-task-details [data]="data"></stp-multichoice-task-details>
+    </div>
+</ng-template>
