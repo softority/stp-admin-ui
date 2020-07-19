@@ -1,0 +1,80 @@
+<div *ngIf="data" class="container">
+    <div class="question">
+
+        <div *ngIf="!questionEditing" class="question-viewer" (click)="questionEditing=true">
+            {{data.question}}
+            <mat-icon class="edit-icon">edit</mat-icon>
+        </div>
+        <div *ngIf="questionEditing" class="question-editor">
+            <mat-form-field floatLabel="never">
+                <textarea matInput placeholder="Type question here..." [formControl]="questionCtrl"
+                    (keydown.enter)="applyQuestionEdit($event)"
+                    (keydown.escape)="cancelQuestionEdit($event)"
+                    (keydown.space)="$event.stopPropagation()" autofocus></textarea>
+                <mat-error>Question required</mat-error>
+            </mat-form-field>
+            <div class="question-check-clear">
+                <mat-icon (click)="applyQuestionEdit($event)">done</mat-icon>
+                <mat-icon (click)="cancelQuestionEdit($event)">clear</mat-icon>
+            </div>
+        </div>
+    </div>
+    <div>
+        <mat-table [dataSource]="answers" class="mat-elevation-z8">
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+            </ng-container>
+
+            <!-- ANSWER Column -->
+            <ng-container matColumnDef="text">
+                <mat-header-cell *matHeaderCellDef> ANSWER </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <div class="answer">
+                        <div class="answer-viewer" *ngIf="!isAnswerEditable(element)" (click)="onAnswerClick(element)">
+                            <span class="answer-text">{{element.text}}</span>
+                            <mat-icon class="edit-icon">edit</mat-icon>
+                        </div>
+                        <div class="answer-editor" *ngIf="isAnswerEditable(element)">
+                            <mat-form-field floatLabel="never" >
+                                <input #input matInput [value]="element.text"
+                                    [attr.disabled]="isAnswerPending(element)"
+                                    placeholder="Type answer here..."
+                                    (keydown.enter)="applyAnswerEdit($event, element, input)"
+                                    (keydown.escape)="cancelAnswerEdit($event, element, input)" autofocus />
+                            </mat-form-field>
+
+                            <mat-icon *ngIf="!isAnswerPending(element)" (click)="applyAnswerEdit($event, element, input)">done</mat-icon>
+                            <mat-icon *ngIf="!isAnswerPending(element)" (click)="cancelAnswerEdit($event, element, input)">clear</mat-icon>
+                            <mat-spinner *ngIf="isAnswerPending(element)" [diameter]="16"></mat-spinner>
+                        </div>
+                    </div>
+                </mat-cell>
+            </ng-container>
+
+            <!-- CORRECT Column -->
+            <ng-container matColumnDef="isCorrect">
+                <mat-header-cell *matHeaderCellDef> CORRECT </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <mat-checkbox [disabled]="isAnswerPending(element)" [checked]="element.isCorrect"></mat-checkbox>
+                </mat-cell>
+            </ng-container>
+
+            <!-- ACTIONS Column -->
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <mat-icon [class.disabled-action]="isAnswerPending(element)" (click)="deleteAnswer(element)">delete_outline</mat-icon>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+    </div>
+    <div>
+        <button mat-raised-button (click)="addAnswer($event)">Add answer</button>
+    </div>
+</div>

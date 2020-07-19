@@ -1,0 +1,130 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.container > div {
+    padding-bottom: 10px;
+}
+
+.question-viewer {
+    font-weight: 100;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-bottom: 15px;
+    
+    .edit-icon {
+        display: none;
+        color: gray;
+        font-size: 20px;
+        margin-left: 5px;
+        cursor: pointer;
+    }
+}
+.question-viewer:hover > .edit-icon {
+    display: flex;
+}
+
+.question-viewer > .edit-icon:hover {
+    display: flex;
+}
+.question-editor {
+    font-weight: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    mat-icon {
+        cursor: pointer;
+    }
+    mat-form-field {
+        width: 100%;
+    }
+    textarea {
+        min-height: 100px;
+    }
+    .question-check-clear {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}
+
+.mat-column-isCorrect {
+    max-width: 60px;
+    display: flex;
+    justify-content: center;
+}
+.mat-column-text {
+    min-width: 450px;
+    flex: 1;
+}
+.mat-column-id {
+    // flex: 0 0 50px !important;
+    // white-space: unset !important;
+    max-width: 50px;
+}
+.mat-column-actions {
+    max-width: 60px;
+    display: flex;
+    justify-content: center;
+
+    mat-icon {
+        color: salmon;
+        cursor: pointer;
+        
+    }
+    .disabled-action{
+        pointer-events: none;
+        color: gray;
+    }
+}
+.answer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    .answer-viewer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .edit-icon {
+        display: none;
+        color: gray;
+        font-size: 20px;
+    }
+
+    .answer-text:hover + .edit-icon {
+        display: flex;
+    }
+
+    .answer-text + .edit-icon:hover {
+        display: flex;
+    }
+
+    .answer-editor {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    mat-form-field {
+        width: 100%;
+        
+        // //min-width: 450px;
+        // flex:1;
+        // input{
+        //     width: 100%;
+        // }
+    }
+    mat-icon {
+        padding-left: 5px;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,68 @@
+TESTS:
+<br />
+<stp-expansion-panel-list (itemDropped)="moveSection($event)" [contentTemplate]="sectionContent"
+    [headerTemplate]="sectionHeader" [items]="sectionsVm" [headerHeight]="'60px'">
+</stp-expansion-panel-list>
+
+<ng-template #sectionHeader let-data="header">
+
+    <div class="section-header-container">
+        <div>{{data.name}}</div>
+    </div>
+
+</ng-template>
+
+<ng-template #sectionContent let-data="tasks">
+    <div class="section-content-container">
+        <stp-expansion-panel-list (itemDropped)="moveTask($event)" [contentTemplate]="taskContent"
+            [headerTemplate]="taskHeader" [items]="data" [headerHeight]="'120px'">
+        </stp-expansion-panel-list>
+    </div>
+</ng-template>
+
+<ng-template #taskHeader let-data="header">
+    <div class="task-header-container">
+        <div>
+            <!-- <div class="drag-handle-and-task-type">
+                <span class="task-drag-handle" cdkDragHandle>
+                    <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                        </path>
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                </span>
+                <mat-chip class="task-type">{{data.type}}</mat-chip>
+            </div> -->
+            <mat-chip class="task-type">{{data.type}}</mat-chip>
+            <div class="task-kpi">
+                <div class="points">
+                    <mat-icon inline=true>equalizer</mat-icon> <span>{{data.points}} points</span>
+                </div>
+                <div class="time">
+                    <mat-icon inline=true>timer</mat-icon><span>{{data.duration}} minutes</span>
+                </div>
+                <div class="complexity">
+                    <mat-chip>{{data.complexity}}</mat-chip>
+                </div>
+            </div>
+        </div>
+        <div class="task-name">{{data.name}}</div>
+        <div class="task-skills">
+            <mat-chip-list *ngFor="let skill of data.skills">
+                <mat-chip>{{skill}}</mat-chip>
+            </mat-chip-list>
+
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #taskContent let-data="content">
+    <div class="task-content-container">
+        {{data}}
+        <!-- <textarea matInput placeholder="Ex. It makes me feel...">
+            
+        </textarea>         -->
+    </div>
+
+</ng-template>

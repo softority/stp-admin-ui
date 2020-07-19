@@ -1,0 +1,34 @@
+.task-name-viewer {
+    font-weight: 100;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    .edit-icon {
+        display: none;
+        color: gray;
+        font-size: 20px;
+        margin-left:5px;
+    }   
+
+}
+.task-name-viewer:hover > .edit-icon {
+    display: flex;
+}
+
+.task-name-viewer > .edit-icon:hover {
+    display: flex;
+}
+
+.task-name-editor {
+    font-weight: 100;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;       
+    align-items: center;
+    
+    mat-form-field{
+        width: 100%;
+    }
+  
+}

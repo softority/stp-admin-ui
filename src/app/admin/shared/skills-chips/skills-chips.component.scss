@@ -1,0 +1,55 @@
+.container {
+    display: flex;
+    flex-direction: column;
+
+    mat-chip {
+        margin-bottom: 10px;
+        margin-right: 8px;
+        padding: 12px 7px;
+        font-size: 12px;
+        min-height: 26px;
+        border-radius: 10px;
+        background-color: #ffffff;
+        border: 1px solid lightblue;
+    }
+    mat-form-field {
+        width: 100%;
+    }
+    & > div {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    .editor {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    .viewer:hover > .edit-icon {
+        display: flex;
+    }
+
+    .viewer > .edit-icon:hover {
+        display: flex;
+    }
+
+    .edit-icon {
+        display: none;
+        color: gray;
+        font-size: 20px;
+        margin-left: 5px;
+        margin-top: 3px;
+    }
+    // .viewer {
+    //     display: flex;
+    //     flex-direction: row;
+    //     justify-content: flex-start;
+    // }
+
+    // .editor {
+    //     display: flex;
+    //     flex-direction: row;
+    //     justify-content: flex-start;
+    //     //width: 100%;
+    // }
+}

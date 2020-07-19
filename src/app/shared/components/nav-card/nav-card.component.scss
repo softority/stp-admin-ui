@@ -1,0 +1,32 @@
+mat-card{
+    margin: 50px;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    width: 120px;
+
+    mat-icon{
+        width: 70px;
+        height: 70px;
+        font-size: 70px;
+        color: #3f51b5;
+    }
+}
+
+.caption{
+    margin-top: 10px;
+    font-size: large;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #3f51b5;
+}
