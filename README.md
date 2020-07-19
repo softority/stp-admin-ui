@@ -1,1 +1,1 @@
-# stp-ui
+# stp-admin-ui
