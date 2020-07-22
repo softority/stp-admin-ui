@@ -1,0 +1,8 @@
+<mat-card class="container">
+
+    <ng-content select="stp-expansion-panel-header"></ng-content>
+
+    <div [ngClass]="{'content': true, 'hidden': isContentHidden}">
+        <ng-content></ng-content>
+    </div>
+</mat-card>

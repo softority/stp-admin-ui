@@ -40,6 +40,7 @@
             color: gray;
             font-size: 18px;
             margin-left: 3px;
+            cursor: pointer;
         }
     }
 
@@ -77,6 +78,7 @@
             color: gray;
             font-size: 18px;
             margin-left: 3px;
+            cursor: pointer;
         }
     }
 
@@ -114,14 +116,15 @@
             color: gray;
             font-size: 18px;
             margin-left: 5px;
+            cursor: pointer;
         }
 
         mat-chip {
-            padding: 12px 7px;
+            padding-top: 12px 7px;
             font-size: 12px;
             min-height: 26px;
             border-radius: 0px;
-            margin-left: 15px;
+            margin-left: 5px;
 
             &.high{
                 background-color: white;
@@ -159,6 +162,9 @@
         mat-form-field {
             min-width: 100px;
             max-width: 100px;
+        }
+        mat-icon{
+            cursor: pointer;
         }
     }
 }

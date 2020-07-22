@@ -1,0 +1,16 @@
+<div class="header-container">
+    <div class="header-content">
+        <ng-content></ng-content>
+    </div>
+    <div class="header-actions">
+        <span class="top">
+            <ng-content select="[slot=drag-handle]"></ng-content>
+        </span>
+        <span class="center">
+            <mat-icon *ngIf="isContentHidden" (click)="toggleState($event)">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="!isContentHidden" (click)="toggleState($event)">keyboard_arrow_up</mat-icon>    
+        </span>
+        <span class="bottom">
+        </span>
+    </div>
+</div> 

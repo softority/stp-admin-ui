@@ -1,0 +1,38 @@
+<ng-container *ngIf="tasksVm">
+    <div *ngFor="let item of tasksVm">
+        <stp-expansion-panel>
+            <stp-expansion-panel-header>
+                <div class="header-container">
+                    <div>
+                        <mat-chip class="task-type">{{item.header.type}}</mat-chip>
+                        <stp-task-metrics [taskInfo]="item.header"></stp-task-metrics>
+                    </div>
+                    <stp-task-name [taskInfo]="item.header"></stp-task-name>
+                    <stp-skills-chips [skills]="item.header.skills"></stp-skills-chips>
+                </div>
+            </stp-expansion-panel-header>
+
+            <div class="content-container">
+                <stp-multichoice-task-details [data]="item.content"></stp-multichoice-task-details>
+            </div>
+
+        </stp-expansion-panel>
+    </div>
+</ng-container>
+<!-- 
+<ng-template #header let-data="header">
+    <div class="header-container">
+        <div>
+            <mat-chip class="task-type">{{data.type}}</mat-chip>
+            <stp-task-metrics [taskInfo]="data"></stp-task-metrics>
+        </div>
+        <stp-task-name [taskInfo]="data"></stp-task-name>
+        <stp-skills-chips [skills]="data.skills"></stp-skills-chips>
+    </div>
+</ng-template>
+
+<ng-template #content let-data="content">
+    <div class="content-container">
+        <stp-multichoice-task-details [data]="data"></stp-multichoice-task-details>
+    </div>
+</ng-template> -->

@@ -1,12 +1,4 @@
-// mat-accordion{
-//     display: contents;
-// }
-// :host{
-//     height: 100%;
-// }
-mat-expansion-panel{
-    margin: 10px;
-}
+
 .drag-placeholder {
     background: white;
     border: dotted 1px lightblue;
@@ -21,5 +13,5 @@ mat-expansion-panel{
     cursor: move;
     width: 24px;
     height: 24px;
-    padding-right: 10px;
+    //padding-right: 10px;
 }

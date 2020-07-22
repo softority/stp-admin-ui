@@ -1,10 +1,8 @@
 import { Component, OnInit, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { ExpansionPanelTemplateData } from '../../interfaces';
 
-export interface ExpansionPanelTemplateData {
-  header: any;
-  content: any;
-}
+
 
 @Component({
   selector: 'stp-expansion-panel-list',
@@ -35,7 +33,7 @@ export class ExpansionPanelListComponent implements OnInit {
   public itemDropped = new EventEmitter<any>();
 
   drop(event: CdkDragDrop<any>) {
-    //console.log(event);
+    console.log(event);
     this.itemDropped.emit(event);
   }
 

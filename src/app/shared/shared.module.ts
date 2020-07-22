@@ -10,6 +10,8 @@ import { PromptDialogComponent } from './components/prompt-dialog/prompt-dialog.
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ExpansionPanelListComponent } from './components/expansion-panel-list/expansion-panel-list.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ExpansionPanelComponent } from './expansion-panel/expansion-panel.component';
+import { ExpansionPanelHeaderComponent } from './expansion-panel-header/expansion-panel-header.component';
 
 
 const dialogs = [
@@ -23,7 +25,9 @@ const dialogs = [
     DynamicMenuComponent,
     PromptDialogComponent,
     ...dialogs,
-    ExpansionPanelListComponent
+    ExpansionPanelListComponent,
+    ExpansionPanelComponent,
+    ExpansionPanelHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +46,9 @@ const dialogs = [
     NavCardComponent,
     DynamicMenuComponent,
     ExpansionPanelListComponent,
-    DragDropModule
+    DragDropModule,
+    ExpansionPanelComponent,
+    ExpansionPanelHeaderComponent
   ],
   entryComponents: [
     ...dialogs

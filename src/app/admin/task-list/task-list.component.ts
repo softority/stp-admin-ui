@@ -36,6 +36,8 @@ export class TaskListComponent implements OnInit {
   
 
   moveTask(event: CdkDragDrop<TaskInfo>) {
+    console.log('moveTask:');
+    console.log(event);
     let tmp = this.tasksVm[event.previousIndex];
     this.tasksVm[event.previousIndex] = this.tasksVm[event.currentIndex];
     this.tasksVm[event.currentIndex] = tmp;

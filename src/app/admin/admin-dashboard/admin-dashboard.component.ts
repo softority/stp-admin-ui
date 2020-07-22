@@ -14,6 +14,7 @@ export class AdminDashboardComponent implements OnInit {
     { caption: "Home", iconName: "home", url: "/a" },
     { caption: "Tasks", iconName: "category", url: "/a/tasks" },
     { caption: "Tests", iconName: "spellcheck", url: "/a/tests" },
+    { caption: "Sandbox", iconName: "pest_control", url: "/a/sbx" },
     // { caption: "Home", iconName: "home", url: "" },
     // { caption: "Categories", iconName: "category", url: "categories" },
     // { caption: "Tests", iconName: "spellcheck", url: "tests" },
