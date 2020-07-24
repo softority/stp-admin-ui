@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { MultichoiceTaskData, Answer } from '../../../core/interfaces';
+import { MultichoiceTaskData, Answer } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
 import { DataService } from 'src/app/core/services/data.service';
 import { allowedNodeEnvironmentFlags } from 'process';
+import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
 
 
 @Component({
@@ -17,8 +18,7 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     private _dataService: DataService
   ) { }
 
-  private _editableAnswer: Answer;
-  private _pendingAnswer: Answer;
+
 
   ngOnInit(): void {
     this.answers = this.data.answers;
@@ -32,9 +32,9 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
 
   questionEditing: boolean;
 
-  applyQuestionEdit(event:Event){
+  applyQuestionEdit(event: Event) {
     event.stopPropagation();
-    if (!this.questionCtrl.valid){
+    if (!this.questionCtrl.valid) {
       return;
     }
 
@@ -42,7 +42,7 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     this.questionEditing = false;
   }
 
-  cancelQuestionEdit(event:Event){
+  cancelQuestionEdit(event: Event) {
     event.stopPropagation();
     this.questionCtrl.setValue(this.data.question);
     this.questionEditing = false;
@@ -52,59 +52,99 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
 
   // #region ANSWERS
 
+  private _pendingAnswer: Answer;
+
   displayedColumns: string[] = ['id', 'text', 'isCorrect', 'actions'];
   answers: Answer[];
   questionCtrl: FormControl;
 
-  onAnswerClick(answer: Answer) {
-    this._editableAnswer = answer;
-  }
+  // onAnswerClick(answer: Answer) {
+  //   this._editableAnswer = answer;
+  // }
 
-  isAnswerEditable(answer: Answer): boolean {
-    const res = this._editableAnswer === answer;
-    return res;
-  }
+  // isAnswerEditable(answer: Answer): boolean {
+  //   const res = this._editableAnswer === answer;
+  //   return res;
+  // }
 
-  isAnswerPending(answer: Answer){
+  isAnswerPending(answer: Answer) {
     const res = this._pendingAnswer === answer;
     return res;
   }
-  
-  applyAnswerEdit(event: Event, answer: Answer, input: HTMLInputElement) {
-    event.stopPropagation();
-    this._pendingAnswer = answer;
-    
-    answer.text = input.value;
+  onEditCompleted(event: EditCompletedEventArgs) {
+    if (!event.valueObject) {
+      throw new Error('valueObject not found');
+    }
+    const answer: Answer = <Answer>event.valueObject;
 
     // if this is new, just added answer
     if (answer.id === undefined) {
+      if (event.canceled) {
+        // remove answer which about to add
+        this.removeAnswerInternal(answer);
+        return;
+      }
+      this._pendingAnswer = answer;
+      answer.text = event.value;
       this._dataService.addAnswer(this.data.taskId, answer)
         .subscribe(res => {
-          this._pendingAnswer = undefined;
-          this._editableAnswer = undefined;
-          if (!res){
+
+          if (!res) {
             alert('Adding answer failed. ' + res.message);
           }
+          event.handleValueCallback(res.ok);
+          this._pendingAnswer = undefined;
         },
-        err => {
-          alert('Adding answer failed. ' + err);
-        });   
-    }
-  }
-
-  cancelAnswerEdit(event: Event, answer: Answer, input: HTMLInputElement) {
-    event.stopPropagation();
-    this._editableAnswer = undefined;
-
-    // if this is new, just added answer
-    if (answer.id === undefined) {
-      // remove answer which about to add
-      this.removeAnswerInternal(answer);
+          err => {
+            alert('Adding answer failed. ' + err);
+            event.handleValueCallback(false);
+            this._pendingAnswer = undefined;
+          });
     }
     else {
-      input.value = answer.text;
+      if (!event.canceled) {
+        answer.text = event.value;
+        event.handleValueCallback(true);
+      }
     }
+    //setTimeout(() => event.handleValueCallback(true), 2000);    
   }
+
+  // applyAnswerEdit(event: Event, answer: Answer, input: HTMLInputElement) {
+  //   event.stopPropagation();
+  //   this._pendingAnswer = answer;
+
+  //   answer.text = input.value;
+
+  //   // if this is new, just added answer
+  //   if (answer.id === undefined) {
+  //     this._dataService.addAnswer(this.data.taskId, answer)
+  //       .subscribe(res => {
+  //         this._pendingAnswer = undefined;
+  //         this._editableAnswer = undefined;
+  //         if (!res) {
+  //           alert('Adding answer failed. ' + res.message);
+  //         }
+  //       },
+  //         err => {
+  //           alert('Adding answer failed. ' + err);
+  //         });
+  //   }
+  // }
+
+  // cancelAnswerEdit(event: Event, answer: Answer, input: HTMLInputElement) {
+  //   event.stopPropagation();
+  //   this._editableAnswer = undefined;
+
+  //   // if this is new, just added answer
+  //   if (answer.id === undefined) {
+  //     // remove answer which about to add
+  //     this.removeAnswerInternal(answer);
+  //   }
+  //   else {
+  //     input.value = answer.text;
+  //   }
+  // }
 
   // TODO: Hide editor without focus when clicking outside
   // onEditorFocusout(event: Event){
@@ -120,7 +160,7 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     }
     const newAnswer = { text: '', isCorrect: false };
     this.addAnswerInternal(newAnswer);
-    this._editableAnswer = newAnswer;
+    //this._editableAnswer = newAnswer;
   }
 
   deleteAnswer(answer: Answer) {

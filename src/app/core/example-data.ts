@@ -1,4 +1,6 @@
-import { TaskViewModel, TaskSectionViewModel, Answer, MultichoiceTaskData} from 'src/app/core/interfaces'
+import { TaskSectionViewModel } from 'src/app/core/interfaces'
+import { TaskViewModel, Answer, MultichoiceTaskData} from 'src/app/core/view-models'
+
 export const answers: Answer[] = [
   {id: 1, text: 'Addition will produce result 1.', isCorrect: false},
   {id: 2,text: 'Result of addition is system-dependent.', isCorrect: false},

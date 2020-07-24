@@ -23,7 +23,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSelectModule} from '@angular/material/select';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-
+import { HttpClientModule } from '@angular/common/http';
 
 
 const modules = [
@@ -49,7 +49,8 @@ const modules = [
   MatAutocompleteModule,
   MatSelectModule,
   MatProgressBarModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  HttpClientModule
 ];
 
 @NgModule({

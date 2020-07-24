@@ -32,7 +32,16 @@
             <ng-container matColumnDef="text">
                 <mat-header-cell *matHeaderCellDef> ANSWER </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                    <div class="answer">
+                    <stp-editable-label 
+                        [placeholder]="'Type answer here...'"
+                        [value]="element.text"
+                        [valueObject]="element"
+                        [editing]="(element.id === undefined)"
+                        (editCompleted)="onEditCompleted($event)"
+                        >
+
+                    </stp-editable-label>
+                    <!-- <div class="answer">
                         <div class="answer-viewer" *ngIf="!isAnswerEditable(element)" (click)="onAnswerClick(element)">
                             <span class="answer-text">{{element.text}}</span>
                             <mat-icon class="edit-icon">edit</mat-icon>
@@ -50,7 +59,7 @@
                             <mat-icon *ngIf="!isAnswerPending(element)" (click)="cancelAnswerEdit($event, element, input)">clear</mat-icon>
                             <mat-spinner *ngIf="isAnswerPending(element)" [diameter]="16"></mat-spinner>
                         </div>
-                    </div>
+                    </div> -->
                 </mat-cell>
             </ng-container>
 

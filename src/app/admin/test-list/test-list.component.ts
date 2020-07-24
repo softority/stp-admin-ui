@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { sections } from '../../core/example-data'
-import { TaskSectionInfo, TaskSectionViewModel, TaskInfo } from '../../core/interfaces';
+import { TaskSectionInfo, TaskSectionViewModel } from '../../core/interfaces';
+import { TaskInfo } from '../../core/view-models';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 //import { filter, flatMap } from 'rxjs/operators';
 

@@ -1,0 +1,21 @@
+
+    <div *ngIf="editing" class="editor" onblur="alert('div blur')">
+        <mat-form-field floatLabel="never" onblur="alert('mat-form-field blur')">
+            <input matInput #input onblur="console.log('input blur')"
+            onfocus="console.log('input focus')"
+                type="{{inputType}}" 
+                [formControl]="valueCtrl"
+                placeholder="{{placeholder}}" 
+                (keydown.enter)="applyEdit($event)"
+                (keydown.escape)="cancelEdit($event)" 
+                autofocus />
+            <mat-error>Invalid data</mat-error>
+        </mat-form-field>
+        <mat-icon *ngIf="!applyingChanges" (click)="applyEdit($event)">done</mat-icon>
+        <mat-icon *ngIf="!applyingChanges" (click)="cancelEdit($event)">clear</mat-icon>
+        <mat-spinner *ngIf="applyingChanges" [diameter]="16"></mat-spinner>
+    </div>
+    <div *ngIf="!editing" class="viewer" (click)="editing=true">
+        <span class="value">{{value}}</span>
+        <mat-icon class="edit-icon">edit</mat-icon> 
+    </div>

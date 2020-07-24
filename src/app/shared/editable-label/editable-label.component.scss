@@ -1,0 +1,58 @@
+:host{
+    width: 100%;
+}
+//.container {
+    // width: 100%;
+    // display: flex;
+    // flex-direction: row;
+    // justify-content: flex-start;
+    // align-items: center;
+    
+    .viewer {
+        &.hidden{
+            display: none;
+        }
+
+        font-weight: 100;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        .edit-icon {
+            display: none;
+            color: gray;
+            font-size: 20px;
+            padding-left: 5px;
+            cursor: pointer;
+        }
+        .value:hover + .edit-icon {
+            display: flex;
+        }
+    
+        .value + .edit-icon:hover {
+            display: flex;
+        }
+    }
+
+    .editor {
+        &.hidden{
+            display: none;
+        }
+
+        font-weight: 100;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        // width: 100%;
+
+        mat-form-field {
+            width: 100%;
+        }
+
+        mat-icon{
+            cursor: pointer;
+        }
+    }
+//}

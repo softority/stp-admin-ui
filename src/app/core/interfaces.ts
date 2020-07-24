@@ -1,4 +1,5 @@
 import { TreeNode } from 'src/app/shared/utils/common-utils';
+import { TaskViewModel } from './view-models';
 
 /** File node data with possible child nodes. */
 export interface FileNode extends TreeNode {
@@ -19,24 +20,6 @@ export interface FlatTreeNode {
   level: number;
   expandable: boolean;
 }
-
-export interface TaskViewModel {
-  section?: TaskSectionViewModel;
-  header: TaskInfo;
-  content: MultichoiceTaskData | string; 
-}
-
-export interface TaskInfo {
-  id: number;
-  name: string;
-  type: string;
-  skills: string[];
-  points: number;
-  duration: number;
-  // TODO: Use enum
-  complexity: string;
-}
-
 export interface TaskSectionViewModel {
   header: TaskSectionInfo;
   tasks: TaskViewModel[];
@@ -47,14 +30,3 @@ export interface TaskSectionInfo {
   name: string;
 }
 
-export interface MultichoiceTaskData {
-  taskId?: number;
-  question: string;
-  answers: Answer[];
-}
-
-export interface Answer {
-  id?: number;
-  text: string;
-  isCorrect: boolean;
-}

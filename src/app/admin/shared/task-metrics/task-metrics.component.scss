@@ -26,82 +26,94 @@
             margin-left: 5px;
         }
     }
-
-    // POINTS
-
-    .points-viewer {
-        font-weight: 100;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-
-        .edit-icon {
-            display: none;
-            color: gray;
-            font-size: 18px;
-            margin-left: 3px;
-            cursor: pointer;
-        }
+    .hidden{
+        visibility: hidden;
     }
 
-    .points-viewer:hover > .edit-icon {
-        display: flex;
+    stp-editable-label{
+        margin-left: 5px;
+        max-width: 50px;
     }
 
-    .points-viewer > .edit-icon:hover {
-        display: flex;
-    }
+    // // POINTS
 
-    .points-editor {
-        font-weight: 100;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
+    // .points-viewer {
+    //     font-weight: 100;
+    //     display: flex;
+    //     flex-direction: row;
+    //     justify-content: flex-start;
 
-        mat-form-field {
-            min-width: 50px;
-            max-width: 50px;
-        }
-    }
+    //     .edit-icon {
+    //         display: none;
+    //         color: gray;
+    //         font-size: 18px;
+    //         margin-left: 3px;
+    //         cursor: pointer;
+    //     }
+    //     stp-editable-label{
+    //         margin-left: 5px;
+    //         max-width: 50px;
+    //     }
+    // }
 
-    // duration
+    // .points-viewer:hover > .edit-icon {
+    //     display: flex;
+    // }
 
-    .duration-viewer {
-        font-weight: 100;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
+    // .points-viewer > .edit-icon:hover {
+    //     display: flex;
+    // }
 
-        .edit-icon {
-            display: none;
-            color: gray;
-            font-size: 18px;
-            margin-left: 3px;
-            cursor: pointer;
-        }
-    }
+    // .points-editor {
+    //     font-weight: 100;
+    //     display: flex;
+    //     flex-direction: row;
+    //     justify-content: flex-start;
+    //     align-items: center;
 
-    .duration-viewer:hover > .edit-icon {
-        display: flex;
-    }
+    //     mat-form-field {
+    //         min-width: 50px;
+    //         max-width: 50px;
+    //     }
+    // }
 
-    .duration-viewer > .edit-icon:hover {
-        display: flex;
-    }
+    // // duration
 
-    .duration-editor {
-        font-weight: 100;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
+    // .duration-viewer {
+    //     font-weight: 100;
+    //     display: flex;
+    //     flex-direction: row;
+    //     justify-content: flex-start;
 
-        mat-form-field {
-            min-width: 50px;
-            max-width: 50px;
-        }
-    }
+    //     .edit-icon {
+    //         display: none;
+    //         color: gray;
+    //         font-size: 18px;
+    //         margin-left: 3px;
+    //         cursor: pointer;
+    //     }
+    // }
+
+    // .duration-viewer:hover > .edit-icon {
+    //     display: flex;
+    // }
+
+    // .duration-viewer > .edit-icon:hover {
+    //     display: flex;
+    // }
+
+    // .duration-editor {
+    //     font-weight: 100;
+    //     display: flex;
+    //     flex-direction: row;
+    //     justify-content: flex-start;
+    //     align-items: center;
+
+    //     mat-form-field {
+    //         min-width: 50px;
+    //         max-width: 50px;
+    //     }
+    // }
 
     // COMPLEXITY
 

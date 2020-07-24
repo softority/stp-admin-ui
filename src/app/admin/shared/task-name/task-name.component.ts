@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TaskInfo } from '../../../core/interfaces';
+import { TaskInfo } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({

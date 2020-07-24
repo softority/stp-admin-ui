@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/core/services/data.service';
-import { MultichoiceTaskData, TaskViewModel } from 'src/app/core/interfaces';
+import { MultichoiceTaskData, TaskViewModel } from 'src/app/core/view-models';
 
 @Component({
   selector: 'stp-expansion-panel-sandbox',

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TaskInfo } from '../../../core/interfaces';
+import { TaskInfo } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
+import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
 
 @Component({
   selector: 'stp-task-metrics',
@@ -12,11 +13,11 @@ export class TaskMetricsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.pointsCtrl = new FormControl(this.taskInfo.points, [
-      Validators.required,
-      Validators.min(0),
-      Validators.max(999)
-    ]);
+    // this.pointsCtrl = new FormControl(this.taskInfo.points, [
+    //   Validators.required,
+    //   Validators.min(0),
+    //   Validators.max(999)
+    // ]);
 
     this.durationCtrl = new FormControl(this.taskInfo.duration, [
       Validators.required,
@@ -34,23 +35,45 @@ export class TaskMetricsComponent implements OnInit {
 
   // #region points
 
-  pointsCtrl: FormControl;
-  pointsEditing: boolean;
-
-  applyPointsEdit(event: Event) {
-    event.stopPropagation();
-    if (!this.pointsCtrl.valid) {
-      return;
+  onPointsEditCompleted(event: EditCompletedEventArgs) {
+    const taskInfo = event.valueObject as TaskInfo;
+    if (!taskInfo){
+      throw new Error('valueObject expected to exist and to be TaskInfo instance');
     }
-    this.taskInfo.points = this.pointsCtrl.value;
-    this.pointsEditing = false;
+    if (!event.canceled){
+      taskInfo.points = parseInt(event.value);
+      event.handleValueCallback(true);
+    }
   }
 
-  cancelPointsEdit(event: Event) {
-    event.stopPropagation();
-    this.pointsCtrl.setValue(this.taskInfo.points);
-    this.pointsEditing = false;
+  onDurationEditCompleted(event: EditCompletedEventArgs) {
+    const taskInfo = event.valueObject as TaskInfo;
+    if (!taskInfo){
+      throw new Error('valueObject expected to exist and to be TaskInfo instance');
+    }
+    if (!event.canceled){
+      taskInfo.duration = parseInt(event.value);
+      event.handleValueCallback(true);
+    }
   }
+
+  // pointsCtrl: FormControl;
+  // pointsEditing: boolean;
+
+  // applyPointsEdit(event: Event) {
+  //   event.stopPropagation();
+  //   if (!this.pointsCtrl.valid) {
+  //     return;
+  //   }
+  //   this.taskInfo.points = this.pointsCtrl.value;
+  //   this.pointsEditing = false;
+  // }
+
+  // cancelPointsEdit(event: Event) {
+  //   event.stopPropagation();
+  //   this.pointsCtrl.setValue(this.taskInfo.points);
+  //   this.pointsEditing = false;
+  // }
 
   // endregion
 

@@ -12,6 +12,7 @@ import { ExpansionPanelListComponent } from './components/expansion-panel-list/e
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ExpansionPanelComponent } from './expansion-panel/expansion-panel.component';
 import { ExpansionPanelHeaderComponent } from './expansion-panel-header/expansion-panel-header.component';
+import { EditableLabelComponent } from './editable-label/editable-label.component';
 
 
 const dialogs = [
@@ -27,7 +28,8 @@ const dialogs = [
     ...dialogs,
     ExpansionPanelListComponent,
     ExpansionPanelComponent,
-    ExpansionPanelHeaderComponent
+    ExpansionPanelHeaderComponent,
+    EditableLabelComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +50,8 @@ const dialogs = [
     ExpansionPanelListComponent,
     DragDropModule,
     ExpansionPanelComponent,
-    ExpansionPanelHeaderComponent
+    ExpansionPanelHeaderComponent,
+    EditableLabelComponent
   ],
   entryComponents: [
     ...dialogs
