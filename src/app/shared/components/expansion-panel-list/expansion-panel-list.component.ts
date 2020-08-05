@@ -21,9 +21,6 @@ export class ExpansionPanelListComponent implements OnInit {
   items: any[];
 
   @Input()
-  headerHeight: string = '120px';
-
-  @Input()
   contentTemplate: TemplateRef<ExpansionPanelTemplateData>;
 
   @Input()
@@ -33,7 +30,8 @@ export class ExpansionPanelListComponent implements OnInit {
   public itemDropped = new EventEmitter<any>();
 
   drop(event: CdkDragDrop<any>) {
-    console.log(event);
+    event.item.data = this.items;
+    console.log(event);    
     this.itemDropped.emit(event);
   }
 
