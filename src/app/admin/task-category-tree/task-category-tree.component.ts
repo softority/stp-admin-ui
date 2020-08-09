@@ -11,29 +11,48 @@ import { Observable } from 'rxjs';
 import { ConfirmationDialogData, ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { TreeNode, findNode } from 'src/app/shared/utils/common-utils';
 import { FlatTreeNode, FileNode } from '../../core/interfaces';
+import { TaskCategoryDataService } from 'src/app/core/services/data.service';
+import { TaskCategoryDto, CreateCategoryCommand } from 'src/app/core/data-contract';
+import { arrayToTree, Item, TreeItem, Config } from 'src/app/shared/utils/arrayToTree';
+import { TaskCategoryVm } from 'src/app/core/view-models';
 
 
 @Component({
-  selector: 'stp-test-category-tree',
-  templateUrl: './test-category-tree.component.html',
-  styleUrls: ['./test-category-tree.component.scss']
+  selector: 'stp-task-category-tree',
+  templateUrl: './task-category-tree.component.html',
+  styleUrls: ['./task-category-tree.component.scss']
 })
-export class TestCategoryTreeComponent {
+export class TaskCategoryTreeComponent {
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _dataService: TaskCategoryDataService
   ) {
     this.treeFlattener = new MatTreeFlattener(
-      this.transformer,
-      this.getLevel,
-      this.isExpandable,
-      this.getChildren);
+      this.transformer.bind(this),
+      this.getLevel.bind(this),
+      this.isExpandable.bind(this),
+      this.getChildren.bind(this));
 
     this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-    this.dataSource.data = files;
+
+    this.loadData();
+
+  }
+
+  loading: boolean;
+
+  private loadData() {
+    this.loading = true;
+    this._dataService.getCategories()
+      .subscribe(x => {
+        this.loading = false;
+        const tree = arrayToTree(x, { dataField: null });
+        this.dataSource.data = tree;
+      });
   }
 
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -42,19 +61,23 @@ export class TestCategoryTreeComponent {
   treeControl: FlatTreeControl<FlatTreeNode>;
 
   /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
-  treeFlattener: MatTreeFlattener<FileNode, FlatTreeNode>;
+  treeFlattener: MatTreeFlattener<TreeItem, FlatTreeNode>;
 
   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-  dataSource: MatTreeFlatDataSource<FileNode, FlatTreeNode>;
+  dataSource: MatTreeFlatDataSource<TreeItem, FlatTreeNode>;
 
   private _selectedNode: FlatTreeNode;
 
   /** Transform the data to something the tree can read. */
-  transformer(node: FileNode, level: number) {
+  transformer(node: TreeItem, level: number) {
+    //const children = this.dataSource.data.filter(x => x.parentId === node.id);
+    //const hasChildren = (children && children.length > 0);
+
     return {
       id: node.id,
       name: node.name,
-      type: node.type,
+      // TODO: change to 'category'
+      type: 'folder', // in task category tree only one type of nodes
       level: level,
       expandable: !!node.children
     };
@@ -76,7 +99,10 @@ export class TestCategoryTreeComponent {
   }
 
   /** Get the children for the node. */
-  getChildren(node: FileNode): FileNode[] | null | undefined {
+  getChildren(node: TreeItem): TreeItem[] | null | undefined {
+    // if (!node)
+    //   return null;
+    //const res = this.dataSource.data.filter(x => x.parentId === node.id)    
     return node.children;
   }
 
@@ -141,10 +167,10 @@ export class TestCategoryTreeComponent {
       }
     }
     else {
-      throw new Error('Unexpected node type ('+ node.type +')!');
+      throw new Error('Unexpected node type (' + node.type + ')!');
     }
   }
-  
+
   private openConfirmationDialog(data: ConfirmationDialogData): Observable<boolean> {
     const config = new MatDialogConfig();
 
@@ -178,28 +204,37 @@ export class TestCategoryTreeComponent {
         placeholder: 'Category name'
       })
       .subscribe(res => {
-        if (name === undefined) {
+        if (!res) {
           return;
         }
         const nodes = this.dataSource.data;
+        const cmd: CreateCategoryCommand = { name: res };
 
         // if parentId is not defined - then add to the root
-        if (parentNode === undefined) {
-          nodes.push({ id: (Math.random() * 10000), name: res, type: 'folder' })
+        if (parentNode !== undefined) {
+          cmd.parentCategoryId = parentNode.id;
         }
-        else {
-          const parent = findNode<FileNode>(nodes, x => x.type === 'folder' && x.id === parentNode.id);
 
-          if (parent === undefined) {
-            alert('Unexpected error! Please contact support.');
-            return;
-          }
-          if (parent.children === undefined) {
-            parent.children = [];
-          }
-          parent.children.push({ id: (Math.random() * 10000), name: res, type: 'folder' });
-        }
-        this.dataSource.data = nodes;
+        this._dataService.createCategory(cmd).subscribe
+          (
+            (val) => {
+              this.loadData();
+
+              // if (parentNode !== undefined) {
+              //   const parent = findNode<TreeItem>(nodes, x => x.id === parentNode.id);
+
+              //   if (!parent){
+              //     throw new Error('Unexpected error! Failed to find parent node.');
+              //   }
+              //   parent.children.push(val);
+              // }
+              // else{
+              //   nodes.push(val); 
+              // }
+              // this.dataSource.data = nodes; 
+            },
+            (err) => { alert(err.error); }
+          );
       })
   }
 
@@ -210,24 +245,41 @@ export class TestCategoryTreeComponent {
         placeholder: 'Name',
         name: node.name
       })
-      .subscribe(res => {
-        if (res !== undefined) {
+      .subscribe(newName => {
+        if (newName !== undefined) {
           const nodes = this.dataSource.data;
-          const n = findNode<FileNode>(nodes, x => x.type === node.type && x.id === node.id);
-          n.name = res;
-          this.dataSource.data = nodes;
+          const n = nodes.find(x => x.id === node.id);
+
+          this._dataService.updateCategoryName(node.id, newName)
+            .subscribe(
+              (res) => {
+                this.loadData();
+                // n.name = newName;
+                // this.dataSource.data = nodes;
+              },
+              (err) => {
+                alert(err.error);
+              });
         }
       });
   }
-  private deleteCategory(categoryName: string) {
+  private deleteCategory(node: FlatTreeNode) {
     this.openConfirmationDialog(
       {
-        title: 'Delete category ' + categoryName + '. Are you shure?'
+        title: 'Delete category ' + node.name + '. Are you shure?'
       })
-      .subscribe(res => {
-        if (res !== undefined) {
-          // TODO
-          alert(res);
+      .subscribe(ok => {
+        if (ok) {
+          this._dataService.deleteCategory(node.id)
+            .subscribe(
+              (res) => {
+                this.loadData();
+                // n.name = newName;
+                // this.dataSource.data = nodes;
+              },
+              (err) => {
+                alert(err.error);
+              });
         }
       });
   }

@@ -1,5 +1,6 @@
 :host{
     height: 100%;
+    display: flex;
   }
   
   .type-icon {
@@ -9,6 +10,7 @@
   
   mat-tree {
     cursor: default;
+    flex: 1;
   }
   mat-tree-node > div{ 
    

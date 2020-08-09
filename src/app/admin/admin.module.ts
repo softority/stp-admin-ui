@@ -9,7 +9,7 @@ import { TestsLayoutComponent } from './tests-layout/tests-layout.component';
 import { TestsTreeComponent } from './tests-tree/tests-tree.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import { TestListComponent } from './test-list/test-list.component';
-import { TestCategoryTreeComponent } from './test-category-tree/test-category-tree.component';
+import { TaskCategoryTreeComponent } from './task-category-tree/task-category-tree.component';
 import { TaskLayoutComponent } from './task-layout/task-layout.component';
 import { MultichoiceTaskDetailsComponent } from './shared/multichoice-task-details/multichoice-task-details.component';
 import { SkillsChipsComponent } from './shared/skills-chips/skills-chips.component';
@@ -26,7 +26,7 @@ import { ExpansionPanelSandboxComponent } from './expansion-panel-sandbox/expans
     TestsTreeComponent,
     TaskListComponent,
     TestListComponent,
-    TestCategoryTreeComponent,
+    TaskCategoryTreeComponent,
     TaskLayoutComponent,
     MultichoiceTaskDetailsComponent,
     SkillsChipsComponent,

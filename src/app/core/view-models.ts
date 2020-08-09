@@ -1,6 +1,7 @@
 
 import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskInfoDto, TaskType, TaskComplexity } from './data-contract';
 import { TaskSectionViewModel } from './interfaces';
+import { TreeItem } from '../shared/utils/arrayToTree';
 
 export class TaskViewModel {
 
@@ -61,6 +62,13 @@ export class MultichoiceTaskData {
     taskId?: number;
     question: string;
     answers: Answer[];
+}
+
+export class TaskCategoryVm implements TreeItem{
+    id: number;
+    name: string;    
+    position: number;   
+    children:  TaskCategoryVm[];
 }
 
 

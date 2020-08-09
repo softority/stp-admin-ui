@@ -1,3 +1,19 @@
+// #region TaskCategory
+
+export class TaskCategoryDto {
+    id: number;
+    name: string;
+    parentId?: number;
+    position: number;
+}
+
+export class CreateCategoryCommand {
+    parentCategoryId?: number;
+    name: string;
+}
+
+//#endregion
+
 export enum TaskType {
     Multichoice,
     Coding

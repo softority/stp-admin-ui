@@ -4,7 +4,7 @@ import { tasks } from '../example-data';
 import { TaskViewModel, Answer, MultichoiceTaskData } from '../view-models';
 import { delay, tap, map, switchMap, flatMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { TaskInfoDto } from '../data-contract';
+import { TaskInfoDto, TaskCategoryDto, CreateCategoryCommand } from '../data-contract';
 
 export interface Result<T>{
   ok: boolean;
@@ -13,6 +13,44 @@ export interface Result<T>{
 }
 
 const baseUrl = "https://localhost:5001";
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TaskCategoryDataService {
+
+  constructor(private http: HttpClient) { 
+  }
+
+  getCategories(): Observable<TaskCategoryDto[]>{
+    const res$ = this.http
+      .get<TaskCategoryDto[]>(`${baseUrl}/api/TaskCategory/GetCategories`);
+      return res$;
+  }
+
+  createCategory(cmd: CreateCategoryCommand): Observable<TaskCategoryDto>{
+    const res$ = this.http.post<TaskCategoryDto>(`${baseUrl}/api/TaskCategory/CreateCategory`, cmd);
+    return res$;
+  }
+
+  updateCategoryName(categoryId: number, value: string){
+    const res$ = this.http.put<TaskCategoryDto>(
+      `${baseUrl}/api/TaskCategory/UpdateCategoryName/${categoryId}`, 
+      JSON.stringify(value),
+      {
+        headers: {'Content-Type': 'application/json'}
+      }
+      );
+    return res$;
+  }
+
+  deleteCategory(categoryId: number){
+    const res$ = this.http.delete(
+      `${baseUrl}/api/TaskCategory/DeleteCategory/${categoryId}`);
+    return res$;
+  }
+}
 
 @Injectable({
   providedIn: 'root'
