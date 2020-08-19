@@ -14,14 +14,26 @@ export class CreateCategoryCommand {
 
 //#endregion
 
+// #region Task
+
+export interface CreateTaskCommand{
+    taskCategoryId: number;
+
+    name: string;
+    points: number;
+    durationMinutes: number;
+    complexity: TaskComplexity;
+    type: TaskType;
+}
+
 export enum TaskType {
-    Multichoice,
-    Coding
+    Multichoice = 0,
+    Coding = 1
 }
 export enum TaskComplexity {
-    Low,
-    Medium,
-    High
+    Low = 0,
+    Medium = 1,
+    High = 2
 }
 export interface TaskSummaryDto {
     id: number;
@@ -31,8 +43,9 @@ export interface TaskSummaryDto {
     durationMinutes: number;
     skills: string[];
     complexity: TaskComplexity;
+    position?: number;
 }
-export interface TaskInfoDto {
+export interface TaskDto {
     taskSummary: TaskSummaryDto;
     multichoiceTaskInfo: MultichoiceTaskInfoDto;
     codingTaskInfo: CodingTaskInfoDto;
@@ -49,4 +62,11 @@ export interface MultichoiceTaskAnswerDto {
     id: number;
     name: string;
     isCorrect: boolean;
+}
+
+//#endregion
+
+export interface SkillDto{
+    id: number;
+    name: string;
 }

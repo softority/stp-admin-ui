@@ -16,6 +16,7 @@ import { SkillsChipsComponent } from './shared/skills-chips/skills-chips.compone
 import { TaskNameComponent } from './shared/task-name/task-name.component';
 import { TaskMetricsComponent } from './shared/task-metrics/task-metrics.component';
 import { ExpansionPanelSandboxComponent } from './expansion-panel-sandbox/expansion-panel-sandbox.component';
+import { CreateTaskDialogComponent } from './create-task-dialog/create-task-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ExpansionPanelSandboxComponent } from './expansion-panel-sandbox/expans
     SkillsChipsComponent,
     TaskNameComponent,
     TaskMetricsComponent,
-    ExpansionPanelSandboxComponent],
+    ExpansionPanelSandboxComponent,
+    CreateTaskDialogComponent],
   imports: [
     AdminRoutingModule,
     SharedModule

@@ -1,0 +1,16 @@
+// form {
+//     display: flex;
+//     flex-direction: column;
+// }
+mat-dialog-content {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+mat-form-field {
+    flex: 1;
+}
+
+mat-dialog-actions {
+    justify-content: flex-end;
+}

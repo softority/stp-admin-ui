@@ -1,6 +1,15 @@
 mat-progress-bar{
     margin-top: 5px;
 }
+.container{
+    display: flex;
+    flex-direction: column;
+
+    button{
+        margin: 5px;
+        align-self: flex-end;
+    }
+}
 .header-container {
     width: 100%;
     //margin-right: 24px;

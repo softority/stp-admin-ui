@@ -1,15 +1,17 @@
 
-import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskInfoDto, TaskType, TaskComplexity } from './data-contract';
+import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskDto, TaskType, TaskComplexity } from './data-contract';
 import { TaskSectionViewModel } from './interfaces';
 import { TreeItem } from '../shared/utils/arrayToTree';
 
 export class TaskViewModel {
 
-    constructor(data: TaskInfoDto) {
+    constructor(data: TaskDto) {
         this.header = new TaskInfo(data.taskSummary);
 
-        if (data.taskSummary.type === TaskType.Multichoice){
+        
+        if (data.taskSummary.type === TaskType.Multichoice){            
             this.content = new MultichoiceTaskData(data.multichoiceTaskInfo);
+            this.content.taskId = this.header.id;
         }
         // TOOD:
         // else if (data.taskSummary.type === TaskType.Coding)
@@ -30,6 +32,7 @@ export class TaskInfo {
         this.points = data.points;
         this.duration = data.durationMinutes;
         this.complexity = TaskComplexity[data.complexity];
+        this.position = data.position;
     }
 
     id: number;
@@ -40,6 +43,8 @@ export class TaskInfo {
     duration: number;
     // TODO: Use enum
     complexity: string;
+
+    position?: number;
 }
 
 export class Answer {

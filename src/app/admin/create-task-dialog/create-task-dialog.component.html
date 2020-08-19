@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<form [formGroup]="form" (ngSubmit)="save()">
+    <mat-dialog-content>
+
+        <mat-form-field>
+            <input matInput placeholder='Task name' formControlName="name" />
+            <mat-error *ngIf="form.controls['name'].hasError('required')">
+                Name is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="number" placeholder='Points' formControlName="points" />
+            <mat-error *ngIf="form.controls['points'].hasError('required')">
+                Points is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="form.controls['points'].hasError('min')">
+                Incorrect value
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="number" placeholder='Duration (mins)' formControlName="duration" />
+            <mat-error *ngIf="form.controls['duration'].hasError('required')">
+                Duration is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="form.controls['duration'].hasError('min')">
+                Incorrect value
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select formControlName="complexity" placeholder='Complexity' required>
+                <mat-option *ngFor="let complexity of complexityValues" [value]="complexity">
+                    {{getComplexityName(complexity)}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls['complexity'].hasError('required')">
+                Complexity is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select formControlName="type" placeholder='Type' required>
+                <mat-option *ngFor="let taskType of taskTypeValues" [value]="taskType">
+                    {{getTaskTypeName(taskType)}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls['type'].hasError('required')">
+                The type of the task is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-button type="button" [mat-dialog-close]="undefined">CANCEL</button>
+        <button mat-button type="submit" color="primary">OK</button>
+    </mat-dialog-actions>
+</form>

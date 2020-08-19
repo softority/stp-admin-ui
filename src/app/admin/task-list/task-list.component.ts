@@ -4,9 +4,16 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { tasks } from '../../core/example-data'
 import { TaskInfo, TaskViewModel, MultichoiceTaskData } from '../../core/view-models';
-import { DataService, TaskInfoDataService } from 'src/app/core/services/data.service';
-import { tap, finalize, map } from 'rxjs/operators';
+import { DataService, TaskDataService } from 'src/app/core/services/data.service';
+import { tap, finalize, map, switchMap, catchError } from 'rxjs/operators';
 import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { CreateTaskDialogComponent } from '../create-task-dialog/create-task-dialog.component';
+import { TaskDto } from 'src/app/core/data-contract';
+import { error } from '@angular/compiler/src/util';
+import { throwError, Observable, Subscription } from 'rxjs';
+import { TaskService } from 'src/app/core/services/task.service';
 
 @Component({
   selector: 'stp-task-list',
@@ -15,31 +22,76 @@ import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-l
 })
 export class TaskListComponent implements OnInit {
 
-  constructor(private dataService: TaskInfoDataService) {
-    this.loading = true
-    dataService.getTasks()
-      //finalize(() => {this.loading = false})
-      .subscribe(data => {
-        this.tasksVm = data.map(x => new TaskViewModel(x));
-        for (let i of this.tasksVm) {
-          (i.content as MultichoiceTaskData).taskId = i.header.id
-        }
-        this.loading = false
-      });
+  loading: boolean;
+  tasksVm$: Observable<TaskViewModel[]>;
+
+  private _categoryId: number;
+  private _subscription = new Subscription();
+
+  constructor(private taskService: TaskService,
+    private _dialog: MatDialog,
+    private route: ActivatedRoute) {
+
+    route.params.subscribe(x => {
+      this._categoryId = parseInt(x?.id);
+      if (this._categoryId === undefined) {
+        throw new Error("Failed to get task id from the route");
+      }
+      else{
+        this.loadData(this._categoryId);
+      }
+    })
   }
 
   ngOnInit(): void {
+    
   }
 
-  loading: boolean;
-  tasksVm: TaskViewModel[];
+  ngOnDestroy(): void {
+    this._subscription.unsubscribe();
+  }
+
+  createTask() {
+
+    const config = new MatDialogConfig();
+
+    config.disableClose = true;
+    config.autoFocus = true;
+    config.data = { taskCategoryId: this._categoryId };
+
+    const dialogRef = this._dialog.open(CreateTaskDialogComponent, config);
+
+    dialogRef.afterClosed().subscribe(createTaskCmd => {
+      this._subscription.add(this.taskService.createTask(createTaskCmd)
+        .subscribe(() => console.log('subscription: createTask'))
+      );
+    })
+  }
 
   moveTask(event: CdkDragDrop<TaskInfo>) {
     console.log('moveTask:');
     console.log(event);
-    let tmp = this.tasksVm[event.previousIndex];
-    this.tasksVm[event.previousIndex] = this.tasksVm[event.currentIndex];
-    this.tasksVm[event.currentIndex] = tmp;
+
+    if (event === undefined || event.item == undefined) {
+      console.error("Unable to get dropping item data!");
+      return;
+    }
+    const tasks = event.item.data as TaskInfo[];
+    if (tasks === undefined || tasks.length === 0) {
+      console.error("Dropping item data is incorrect!");
+      return;
+    }
+    const taskId = tasks[event.previousIndex].id;
+    const newPosition = tasks[event.currentIndex].position;
+
+    this._subscription.add(
+      this.taskService.updateTaskPosition(taskId, newPosition)
+        .subscribe(() => console.log('subscription: updateTaskPosition'))
+    );
+
+    // let tmp = this.tasksVm[event.previousIndex];
+    // this.tasksVm[event.previousIndex] = this.tasksVm[event.currentIndex];
+    // this.tasksVm[event.currentIndex] = tmp;
   }
 
   onNameEditCompleted(event: EditCompletedEventArgs) {
@@ -51,5 +103,13 @@ export class TaskListComponent implements OnInit {
       taskInfo.name = event.value;
       event.handleValueCallback(true);
     }
+  }
+
+  private loadData(categoryId: number) {
+    //this.loading = true;
+    this.tasksVm$ = this.taskService.getTasks(categoryId).
+      pipe(
+        finalize(() => { this.loading = false })
+      );
   }
 }

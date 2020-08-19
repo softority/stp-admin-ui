@@ -14,13 +14,13 @@
                 </mat-chip>
                 <input placeholder="Type skills..." #skillInput [formControl]="skillCtrl" [matAutocomplete]="auto"
                     [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="add(skills, $event)"
-                    (keydown.enter)="applySkillsEdit($event)" autofocus>
+                    (matChipInputTokenEnd)="add( $event)"
+                    (keydown.enter)="finishEditing($event)" autofocus>
             </mat-chip-list>
             
             <!-- TODO: Improve UX -->
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                <mat-option *ngFor="let skill of filteredSkills | async" [value]="skill">
+                <mat-option *ngFor="let skill of filteredSkills$ | async" [value]="skill">
                     {{skill}}
                 </mat-option>
             </mat-autocomplete>
