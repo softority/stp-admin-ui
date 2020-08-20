@@ -3,11 +3,29 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TaskType, TaskComplexity } from 'src/app/core/data-contract';
 import { TaskDataService } from 'src/app/core/services/data.service';
+import { SkillVm } from 'src/app/core/view-models';
 
 
-export class CreateTaskDialogData {
+export interface CreateTaskDialogResult{
+  //taskCategoryId: number;
+  name: string;
+  points: number;
+  durationMinutes: number;
+  complexity: TaskComplexity;
+  type: TaskType;
+  skills: SkillVm[];
+}
+// TODO: extend with props which are make sense to set from the outside
+// TOOD: remove taskCategoryId - it is just transit field
+export interface CreateTaskDialogData {
   title?: string;
-  taskCategoryId: number;
+  //taskCategoryId: number;
+
+  points?: number;
+  durationMinutes?: number;
+  complexity?: TaskComplexity;
+  type?: TaskType;
+  skills?: SkillVm[];
 }
 
 @Component({
@@ -17,10 +35,12 @@ export class CreateTaskDialogData {
 })
 export class CreateTaskDialogComponent implements OnInit {
 
+  skills: SkillVm[] = [];
+
   constructor(
     private fb: FormBuilder,
     private dataService: TaskDataService,
-    public dialogRef: MatDialogRef<CreateTaskDialogComponent>,
+    public dialogRef: MatDialogRef<CreateTaskDialogComponent, CreateTaskDialogResult>,
     @Inject(MAT_DIALOG_DATA) public data: CreateTaskDialogData) {
 
     if (data.title) {
@@ -29,11 +49,14 @@ export class CreateTaskDialogComponent implements OnInit {
 
     this.form = fb.group({
       name: [undefined, Validators.required],
-      points: [5, [Validators.required, Validators.min(0)]],
-      duration: [2, [Validators.required, Validators.min(1)]],
-      type: [TaskType.Multichoice, Validators.required],
-      complexity: [TaskComplexity.Medium, Validators.required],
+      points: [data.points, [Validators.required, Validators.min(0)]],
+      duration: [data.durationMinutes, [Validators.required, Validators.min(1)]],
+      type: [data.type, Validators.required],
+      complexity: [data.complexity, Validators.required],
     });
+
+    // TODO: embed <stp-skills-chips> as form control (via ControlValueAccessor)
+    this.skills = data.skills ?? [];
   }
 
   ngOnInit(): void {
@@ -58,19 +81,20 @@ export class CreateTaskDialogComponent implements OnInit {
   title: string = "Create new task";
 
   save() {
-
+    console.log(`<CreateTaskDialog.save> skills: ${JSON.stringify(this.skills)}`);
     if (!this.form.valid) {
       return;
     }
     
     const value = this.form.value;
     this.dialogRef.close({
-      taskCategoryId: this.data.taskCategoryId,
-      durationMinutes: value.duration,
-      complexity: value.complexity,
+      //taskCategoryId: this.data.taskCategoryId,
       name: value.name,
+      durationMinutes: value.duration,
+      complexity: value.complexity,      
       points: value.points,
-      type: value.type
+      type: value.type,
+      skills: this.skills
     });
 
   }

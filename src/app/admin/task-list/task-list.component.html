@@ -1,7 +1,9 @@
-<mat-progress-bar *ngIf="loading" mode="buffer"></mat-progress-bar>
-<div class="container" *ngIf="!loading">
-    <stp-expansion-panel-list *ngIf="!loading" (itemDropped)="moveTask($event)" [contentTemplate]="content"
-        [headerTemplate]="header" [items]="tasksVm$ | async">
+<ng-template #loading>
+    <mat-progress-bar *ngIf="loading" mode="buffer"></mat-progress-bar>
+</ng-template>
+<div class="container" *ngIf="tasksVm$ | async as tasksVm; else loading">
+    <stp-expansion-panel-list  (itemDropped)="moveTask($event)" [contentTemplate]="content"
+        [headerTemplate]="header" [items]="tasksVm">
     </stp-expansion-panel-list>
     <button mat-fab color="primary" (click)="createTask()">
         <mat-icon>add</mat-icon>
@@ -19,7 +21,7 @@
         </stp-editable-label>
 
         <!-- <stp-task-name [taskInfo]="data"></stp-task-name> -->
-        <!-- <stp-skills-chips [skills]="data.skills"></stp-skills-chips> -->
+        <stp-skills-chips [skills]="data.skills"></stp-skills-chips>
     </div>
 </ng-template>
 

@@ -1,16 +1,16 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { tasks } from '../../core/example-data'
-import { TaskInfo, TaskViewModel, MultichoiceTaskData } from '../../core/view-models';
+import { TaskInfo, TaskViewModel, MultichoiceTaskData, SkillStatus, SkillVm } from '../../core/view-models';
 import { DataService, TaskDataService } from 'src/app/core/services/data.service';
 import { tap, finalize, map, switchMap, catchError } from 'rxjs/operators';
 import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { CreateTaskDialogComponent } from '../create-task-dialog/create-task-dialog.component';
-import { TaskDto } from 'src/app/core/data-contract';
+import { CreateTaskDialogComponent, CreateTaskDialogResult, CreateTaskDialogData } from '../create-task-dialog/create-task-dialog.component';
+import { TaskDto, TaskComplexity, TaskType, SkillStateDto, SkillState } from 'src/app/core/data-contract';
 import { error } from '@angular/compiler/src/util';
 import { throwError, Observable, Subscription } from 'rxjs';
 import { TaskService } from 'src/app/core/services/task.service';
@@ -20,7 +20,7 @@ import { TaskService } from 'src/app/core/services/task.service';
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, OnDestroy {
 
   loading: boolean;
   tasksVm$: Observable<TaskViewModel[]>;
@@ -37,14 +37,14 @@ export class TaskListComponent implements OnInit {
       if (this._categoryId === undefined) {
         throw new Error("Failed to get task id from the route");
       }
-      else{
+      else {
         this.loadData(this._categoryId);
       }
     })
   }
 
   ngOnInit(): void {
-    
+
   }
 
   ngOnDestroy(): void {
@@ -53,21 +53,40 @@ export class TaskListComponent implements OnInit {
 
   createTask() {
 
-    const config = new MatDialogConfig();
+    const config = new MatDialogConfig<CreateTaskDialogData>();
 
     config.disableClose = true;
     config.autoFocus = true;
-    config.data = { taskCategoryId: this._categoryId };
+    config.data =
+    {
+      //taskCategoryId: this._categoryId,
+      complexity: TaskComplexity.Medium,
+      durationMinutes: 2,
+      points: 5,
+      type: TaskType.Multichoice
+    };
 
-    const dialogRef = this._dialog.open(CreateTaskDialogComponent, config);
+    const dialogRef = this._dialog
+      .open<CreateTaskDialogComponent, CreateTaskDialogData, CreateTaskDialogResult>(
+        CreateTaskDialogComponent, config);
 
-    dialogRef.afterClosed().subscribe(createTaskCmd => {
-      this._subscription.add(this.taskService.createTask(createTaskCmd)
-        .subscribe(() => console.log('subscription: createTask'))
-      );
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+
+        this.taskService.createTask({
+          name: res.name,
+          complexity: res.complexity,
+          durationMinutes: res.durationMinutes,
+          points: res.points,
+          taskCategoryId: this._categoryId,
+          type: res.type,
+          skills: this.getSkillStates(res.skills)
+        })
+        .subscribe(() => console.log('subscription: createTask'));
+      }
     })
   }
-
+  
   moveTask(event: CdkDragDrop<TaskInfo>) {
     console.log('moveTask:');
     console.log(event);
@@ -106,10 +125,15 @@ export class TaskListComponent implements OnInit {
   }
 
   private loadData(categoryId: number) {
-    //this.loading = true;
-    this.tasksVm$ = this.taskService.getTasks(categoryId).
-      pipe(
-        finalize(() => { this.loading = false })
-      );
+    this.loading = true;
+    this.tasksVm$ = this.taskService.getTasks(categoryId);
+  }
+
+  private getSkillStates(skills: SkillVm[]): SkillStateDto[] {
+    const res: SkillStateDto[] = [];
+    for (let s of skills.filter(x => x.status !== SkillStatus.Unchanged)) {
+      res.push(s.getSkillState());
+    }
+    return res;
   }
 }

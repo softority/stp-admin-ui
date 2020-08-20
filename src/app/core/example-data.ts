@@ -24,12 +24,7 @@ export const tasks: TaskViewModel[] = [
       id: 1,
       name: 'Array dimensions question with generics constraints and basics v02 MR',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -42,12 +37,7 @@ export const tasks: TaskViewModel[] = [
       id: 2,
       name: 'Task 2',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -60,12 +50,7 @@ export const tasks: TaskViewModel[] = [
       id: 3,
       name: 'Task 3',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -78,12 +63,7 @@ export const tasks: TaskViewModel[] = [
       id: 4,
       name: 'Task 4',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -98,12 +78,7 @@ export const tasks2: TaskViewModel[] = [
       id: 1,
       name: 'Array dimensions question with generics constraints and basics v02 MR',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -116,12 +91,7 @@ export const tasks2: TaskViewModel[] = [
       id: 2,
       name: 'Task 2',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -134,12 +104,7 @@ export const tasks2: TaskViewModel[] = [
       id: 3,
       name: 'Task 3',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -152,12 +117,7 @@ export const tasks2: TaskViewModel[] = [
       id: 4,
       name: 'Task 4',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -172,12 +132,7 @@ export const tasks3: TaskViewModel[] = [
       id: 1,
       name: 'Array dimensions question with generics constraints and basics v02 MR',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -190,12 +145,7 @@ export const tasks3: TaskViewModel[] = [
       id: 2,
       name: 'Task 2',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -208,12 +158,7 @@ export const tasks3: TaskViewModel[] = [
       id: 3,
       name: 'Task 3',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'
@@ -226,12 +171,7 @@ export const tasks3: TaskViewModel[] = [
       id: 4,
       name: 'Task 4',
       type: 'Multi-choice',
-      skills: [
-        'Arrays',
-        '.NET',
-        'C#',
-        'Generics'
-      ],
+      skills: [],
       points: 20,
       duration: 7,
       complexity: 'High'

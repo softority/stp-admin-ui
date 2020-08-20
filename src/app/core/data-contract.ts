@@ -1,3 +1,5 @@
+import { SkillVm } from './view-models';
+
 // #region TaskCategory
 
 export class TaskCategoryDto {
@@ -24,8 +26,19 @@ export interface CreateTaskCommand{
     durationMinutes: number;
     complexity: TaskComplexity;
     type: TaskType;
+    skills: SkillStateDto[];
+    
 }
-
+export interface SkillStateDto{
+    id?: number;
+    name: string;
+    state: SkillState;
+}
+export enum SkillState {
+    Added = 0,
+    Removed = 1,
+    New = 2,
+}
 export enum TaskType {
     Multichoice = 0,
     Coding = 1
@@ -41,7 +54,7 @@ export interface TaskSummaryDto {
     type: TaskType;
     points: number;
     durationMinutes: number;
-    skills: string[];
+    skills: SkillDto[];
     complexity: TaskComplexity;
     position?: number;
 }

@@ -1,27 +1,28 @@
 <div class="container" >
     <div *ngIf="!editMode" class="viewer" (click)="editMode = true">
-        <mat-chip-list *ngFor="let skill of skills">
-            <mat-chip>{{skill}}</mat-chip>
+        <mat-chip-list *ngFor="let skill of visibleSkills">
+            <mat-chip>{{skill.name}}</mat-chip>
         </mat-chip-list>
         <mat-icon class="edit-icon">edit</mat-icon>
     </div>
     <div *ngIf="editMode" class="editor">
-        <mat-form-field floatLabel="never">
+        <mat-form-field floatLabel="never"  >
             <mat-chip-list #chipList aria-label="Skill selection">
-                <mat-chip *ngFor="let skill of skills" [selectable]="true" [removable]="true" (removed)="remove(skill)">
-                    {{skill}}
+                <mat-chip *ngFor="let skill of visibleSkills" [selectable]="true" [removable]="true" (removed)="remove(skill)">
+                    {{skill.name}}
                     <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
                 </mat-chip>
                 <input placeholder="Type skills..." #skillInput [formControl]="skillCtrl" [matAutocomplete]="auto"
                     [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="add( $event)"
-                    (keydown.enter)="finishEditing($event)" autofocus>
+                    (matChipInputTokenEnd)="add($event)"
+                    
+                    (blur)="onBlur($event)" autofocus>
             </mat-chip-list>
             
             <!-- TODO: Improve UX -->
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="select($event)">
                 <mat-option *ngFor="let skill of filteredSkills$ | async" [value]="skill">
-                    {{skill}}
+                    {{skill.name}}
                 </mat-option>
             </mat-autocomplete>
             <!-- Add check icon -->

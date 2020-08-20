@@ -46,6 +46,8 @@
                 The type of the task is <strong>required</strong>
             </mat-error>
         </mat-form-field>
+        <!-- TODO: embed to the form via implementing ControlValueAccessor interface -->
+        <stp-skills-chips [(skills)]="skills" [editMode]="true"></stp-skills-chips>
 
     </mat-dialog-content>
 

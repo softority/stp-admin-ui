@@ -4,7 +4,7 @@ import { tasks } from '../example-data';
 import { TaskViewModel, Answer, MultichoiceTaskData } from '../view-models';
 import { delay, tap, map, switchMap, flatMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { TaskDto, TaskCategoryDto, CreateCategoryCommand, CreateTaskCommand, SkillDto } from '../data-contract';
+import { TaskDto, TaskCategoryDto, CreateCategoryCommand, CreateTaskCommand, SkillDto, SkillStateDto } from '../data-contract';
 
 export interface Result<T> {
   ok: boolean;
@@ -24,6 +24,7 @@ export class SkillDataService {
   }
 
   getAllSkills(): Observable<SkillDto[]> {
+    console.log('getAllSkills -->');
     const res$ = this.http
       .get<SkillDto[]>(`${baseUrl}/api/Skill/GetAllSkills`);
     return res$;
@@ -97,6 +98,10 @@ export class TaskDataService {
     return res$;
   }
 
+  updateSkills(taskId: number, skills: SkillStateDto[]): Observable<SkillDto[]> {
+    const res$ = this.http.put<SkillDto[]>(`${baseUrl}/api/Task/UpdateSkills/${taskId}`, skills);
+    return res$;
+  }
 
   updateTaskPosition(taskId: number, position: number) {
     const res$ = this.http.put<TaskCategoryDto>(

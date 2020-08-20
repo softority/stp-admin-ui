@@ -1,15 +1,16 @@
 
-import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskDto, TaskType, TaskComplexity } from './data-contract';
+import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskDto, TaskType, TaskComplexity, SkillDto, SkillStateDto, SkillState } from './data-contract';
 import { TaskSectionViewModel } from './interfaces';
 import { TreeItem } from '../shared/utils/arrayToTree';
+import { SkillDataService } from './services/data.service';
 
 export class TaskViewModel {
 
     constructor(data: TaskDto) {
         this.header = new TaskInfo(data.taskSummary);
 
-        
-        if (data.taskSummary.type === TaskType.Multichoice){            
+
+        if (data.taskSummary.type === TaskType.Multichoice) {
             this.content = new MultichoiceTaskData(data.multichoiceTaskInfo);
             this.content.taskId = this.header.id;
         }
@@ -28,17 +29,21 @@ export class TaskInfo {
         this.id = data.id;
         this.name = data.name;
         this.type = TaskType[data.type];
-        this.skills = data.skills;
+        //this.skills = data.skills;
         this.points = data.points;
         this.duration = data.durationMinutes;
         this.complexity = TaskComplexity[data.complexity];
         this.position = data.position;
+
+        for(let s of data.skills){
+            this.skills.push(SkillVm.fromDto(s))
+        }
     }
 
     id: number;
     name: string;
     type: string;
-    skills: string[];
+    skills: SkillVm[] = [];
     points: number;
     duration: number;
     // TODO: Use enum
@@ -69,11 +74,72 @@ export class MultichoiceTaskData {
     answers: Answer[];
 }
 
-export class TaskCategoryVm implements TreeItem{
+export class TaskCategoryVm implements TreeItem {
     id: number;
-    name: string;    
-    position: number;   
-    children:  TaskCategoryVm[];
+    name: string;
+    position: number;
+    children: TaskCategoryVm[];
+}
+
+export enum SkillStatus {
+    Unchanged,
+    New,
+    Added,
+    Removed
+}
+export class SkillVm {
+    private constructor() {
+    }
+
+    static fromDto(skill: SkillDto, state?: SkillStatus): SkillVm {
+        const res = new SkillVm();
+        res.id = skill.id;
+        res.name = skill.name;
+        res.status = state ?? SkillStatus.Unchanged;
+        return res;
+    }
+
+    static create(name: string, state: SkillStatus): SkillVm {
+        const res = new SkillVm();
+        res.name = name;
+        res.status = state;
+        return res;
+    }
+
+    id?: number;
+    name: string;
+    status: SkillStatus
+
+
+    getSkillState(): SkillStateDto {
+        
+        if (this.status == SkillStatus.Unchanged){
+            return null;
+        }
+
+        let res: SkillStateDto = {
+            name: this.name,
+            id: this.id,
+            state: SkillState.Added
+        };
+        switch (this.status) {
+            case SkillStatus.Added:
+                res.state = SkillState.Added;
+                break;
+            case SkillStatus.Removed:
+                res.state = SkillState.Removed;
+                break;
+            case SkillStatus.New:
+                res.state = SkillState.New;
+                break;
+            default:
+                console.error(`Unexpected SkillStatus: ${this.status}`)
+                break;
+        }
+        return res;
+    }
+     
+    
 }
 
 
