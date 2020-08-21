@@ -72,16 +72,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-
-        this.taskService.createTask({
-          name: res.name,
-          complexity: res.complexity,
-          durationMinutes: res.durationMinutes,
-          points: res.points,
-          taskCategoryId: this._categoryId,
-          type: res.type,
-          skills: this.getSkillStates(res.skills)
-        })
+        this.taskService.createTask(res)
         .subscribe(() => console.log('subscription: createTask'));
       }
     })
@@ -113,27 +104,10 @@ export class TaskListComponent implements OnInit, OnDestroy {
     // this.tasksVm[event.currentIndex] = tmp;
   }
 
-  onNameEditCompleted(event: EditCompletedEventArgs) {
-    const taskInfo = event.valueObject as TaskInfo;
-    if (!taskInfo) {
-      throw new Error('valueObject expected to exist and to be TaskInfo instance');
-    }
-    if (!event.canceled) {
-      taskInfo.name = event.value;
-      event.handleValueCallback(true);
-    }
-  }
+  
 
   private loadData(categoryId: number) {
     this.loading = true;
     this.tasksVm$ = this.taskService.getTasks(categoryId);
-  }
-
-  private getSkillStates(skills: SkillVm[]): SkillStateDto[] {
-    const res: SkillStateDto[] = [];
-    for (let s of skills.filter(x => x.status !== SkillStatus.Unchanged)) {
-      res.push(s.getSkillState());
-    }
-    return res;
-  }
+  }  
 }

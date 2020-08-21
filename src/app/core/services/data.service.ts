@@ -99,6 +99,7 @@ export class TaskDataService {
   }
 
   updateSkills(taskId: number, skills: SkillStateDto[]): Observable<SkillDto[]> {
+    console.log(`updateSkills. taskId:${taskId} -->`);
     const res$ = this.http.put<SkillDto[]>(`${baseUrl}/api/Task/UpdateSkills/${taskId}`, skills);
     return res$;
   }

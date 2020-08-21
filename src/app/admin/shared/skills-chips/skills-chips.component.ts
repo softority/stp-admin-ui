@@ -29,8 +29,13 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
   skills: SkillVm[] = [];
 
   @Input()
+  allSkills$: Observable<SkillVm[]>;
+
+  @Input()
   get visibleSkills(): SkillVm[] {
+    
     const res = this.skills.filter(x => x.status !== SkillStatus.Removed);
+    //console.log(`visibleSkills: ${JSON.stringify(res)}`);
     return res;
   }
 
@@ -53,14 +58,15 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
 
     console.log('SkillsChipsComponent ctor()')
 
-    // TODO: <??> shareReplay is not working as expected!
-    const allSkills$ = this._skillTracker.pipe(
-      startWith([]),
-      switchMap(() => _dataService.getAllSkills().pipe(shareReplay(1))),
-      map(x => x.map(y => SkillVm.fromDto(y, SkillStatus.Added))),
-      map(x => this.filterByExistingSkills(x))
-    );
+    // const allSkills$ = this._skillTracker.pipe(
+    //   startWith([]),
+    //   switchMap(() => _dataService.getAllSkills().pipe(shareReplay(1))),
+    //   map(x => x.map(y => SkillVm.fromDto(y, SkillStatus.Added))),
+    //   map(x => this.filterByExistingSkills(x))
+    // );
 
+    
+    
     // TODO: fix the issue that all skills load from server each time
     // const tmp$ = _dataService.getAllSkills().pipe(
     //   map(x => x.map(y => SkillVm.fromDto(y, SkillState.Added))),
@@ -72,22 +78,31 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     //this.skillCtrl.statusChanges.subscribe((x) => console.log(`statusChanges: ${x}`));
     //this.skillCtrl.valueChanges.subscribe((x) => console.log(`valueChanges: ${JSON.stringify(x)}`));
 
-    const searchText$: Observable<string | null> =
-      merge(of(''), this.skillCtrl.valueChanges.pipe(debounceTime(300)));
-
-    this.filteredSkills$ = combineLatest([allSkills$, searchText$])
-      .pipe(
-        map(([allSkills, searchText]) => searchText ? this.filterBySearchText(allSkills, searchText) : allSkills),
-        tap(x => this._filteredSkillsCache = x)
-      );
+    
     //this._skillTracker.pipe(switchMap(() => this.filteredSkills$))
   }
   private _filteredSkillsCache: SkillVm[] = [];
 
   ngOnInit(): void {
     //this._prevSkills = this.skills.slice();
-    this._skillTracker.next();
+    //this._skillTracker.next();
     //this.skillCtrl.setValue('1');
+
+    const skillsWithoutAdded$ = this._skillTracker.pipe(
+      startWith([]),
+      switchMap(() => this.allSkills$.pipe(
+        map(x => this.filterByExistingSkills(x))
+      ))
+    );
+
+    const searchText$: Observable<string | null> =
+      merge(of(''), this.skillCtrl.valueChanges.pipe(debounceTime(300)));
+
+    this.filteredSkills$ = combineLatest([skillsWithoutAdded$, searchText$])
+      .pipe(
+        map(([allSkills, searchText]) => searchText ? this.filterBySearchText(allSkills, searchText) : allSkills),
+        tap(x => this._filteredSkillsCache = x)
+      );
   }
 
   ngOnDestroy(): void {
@@ -138,7 +153,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
           this._skillTracker.next();
         }
         else {
-          this.addOrRestoreSkill(SkillVm.create(skillName, SkillStatus.New));          
+          this.addOrRestoreSkill(SkillVm.create(skillName, SkillStatus.New));
         }
       }
     }
@@ -191,6 +206,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     else {
       console.error(`Adding skill in invalid state: ${JSON.stringify(skill)}`)
     }
+    console.log(`addOrRestoreSkill: ${JSON.stringify(skill)}`);
   }
   select(event: MatAutocompleteSelectedEvent): void {
 

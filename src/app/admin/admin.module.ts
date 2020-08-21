@@ -17,6 +17,7 @@ import { TaskNameComponent } from './shared/task-name/task-name.component';
 import { TaskMetricsComponent } from './shared/task-metrics/task-metrics.component';
 import { ExpansionPanelSandboxComponent } from './expansion-panel-sandbox/expansion-panel-sandbox.component';
 import { CreateTaskDialogComponent } from './create-task-dialog/create-task-dialog.component';
+import { TaskSummaryComponent } from './shared/task-summary/task-summary.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { CreateTaskDialogComponent } from './create-task-dialog/create-task-dial
     TaskNameComponent,
     TaskMetricsComponent,
     ExpansionPanelSandboxComponent,
-    CreateTaskDialogComponent],
+    CreateTaskDialogComponent,
+    TaskSummaryComponent],
   imports: [
     AdminRoutingModule,
     SharedModule
