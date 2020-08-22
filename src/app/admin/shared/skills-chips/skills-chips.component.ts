@@ -1,15 +1,19 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
 import { Observable, Subject, BehaviorSubject, combineLatest, merge, of } from 'rxjs';
 import { startWith, map, concatMap, switchMap, debounceTime, shareReplay, repeat, tap } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SkillDataService } from 'src/app/core/services/data.service';
-import { SkillDto } from 'src/app/core/data-contract';
 import { SkillVm, SkillStatus } from 'src/app/core/view-models';
-import { JsonPipe } from '@angular/common';
+import { state } from '@angular/animations';
+
+export interface SkillsViewConfig {
+  editMode?: boolean;
+  processing?: boolean;
+  error?: string;
+}
 
 @Component({
   selector: 'stp-skills-chips',
@@ -18,28 +22,51 @@ import { JsonPipe } from '@angular/common';
 })
 export class SkillsChipsComponent implements OnInit, OnDestroy {
 
-  @Input()
-  editMode: boolean;
-
-  @Input()
-  processing: boolean;
-
   // Existing skills
   @Input()
-  skills: SkillVm[] = [];
+  set skills(value: SkillVm[]) {
+    console.log(`SET SKILLS: ${JSON.stringify(value)}`);
+    this._skills = value;
+    this._prevSkills = this._skills.map(x => Object.assign({}, x));
+  }
+  get skills(): SkillVm[] {
+    return this._skills;
+  }
+
+  @Input ()
+  viewModeOff: boolean;
 
   @Input()
   allSkills$: Observable<SkillVm[]>;
 
   @Input()
+  state$: Observable<SkillsViewConfig>;
+
+  get editMode(): boolean {
+    return this._editMode;
+  }
+
+  @Input()
+  set editMode(value: boolean) {
+    console.log(`set editMode=${value}, visibleSkills.length=${this.visibleSkills.length}`);
+    if (!value) {
+      if (this.viewModeOff) {
+        // view mode without items is forbidden
+        return;
+      }
+      this.error = undefined;
+    }
+    this._editMode = value;
+  }
+
+  processing: boolean;
+  error: string;
+
   get visibleSkills(): SkillVm[] {
-    
     const res = this.skills.filter(x => x.status !== SkillStatus.Removed);
     //console.log(`visibleSkills: ${JSON.stringify(res)}`);
     return res;
   }
-
-  //private _prevSkills: SkillVm[];
 
   @Output()
   skillsChange: EventEmitter<SkillVm[]> = new EventEmitter<SkillVm[]>();
@@ -51,8 +78,10 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   skillCtrl = new FormControl();
 
-  //private allSkills$: Observable<SkillVm[]>;
   private _skillTracker = new Subject<SkillVm[]>();
+  private _skills: SkillVm[] = [];
+  private _prevSkills: SkillVm[];
+  private _editMode: boolean;
 
   constructor(private _dataService: SkillDataService) {
 
@@ -65,8 +94,8 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     //   map(x => this.filterByExistingSkills(x))
     // );
 
-    
-    
+
+
     // TODO: fix the issue that all skills load from server each time
     // const tmp$ = _dataService.getAllSkills().pipe(
     //   map(x => x.map(y => SkillVm.fromDto(y, SkillState.Added))),
@@ -78,16 +107,30 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     //this.skillCtrl.statusChanges.subscribe((x) => console.log(`statusChanges: ${x}`));
     //this.skillCtrl.valueChanges.subscribe((x) => console.log(`valueChanges: ${JSON.stringify(x)}`));
 
-    
+
     //this._skillTracker.pipe(switchMap(() => this.filteredSkills$))
   }
   private _filteredSkillsCache: SkillVm[] = [];
 
   ngOnInit(): void {
-    //this._prevSkills = this.skills.slice();
-    //this._skillTracker.next();
-    //this.skillCtrl.setValue('1');
+    
+    if (this.viewModeOff){
+      this.editMode = true;
+    }
 
+    if (this.state$) {
+      this.state$.subscribe(x => {
+        if (x.editMode !== undefined) {
+          this.editMode = x.editMode;
+        }
+        if (x.processing !== undefined) {
+          this.processing = x.processing;
+        }
+        if (x.error !== undefined) {
+          this.error = x.error;
+        }
+      });
+    }
     const skillsWithoutAdded$ = this._skillTracker.pipe(
       startWith([]),
       switchMap(() => this.allSkills$.pipe(
@@ -109,26 +152,42 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     // TODO: unsubscribe
   }
 
-  onBlur(event: Event) {
-    //event.stopPropagation();
-    console.log(`onblur -> emit: ${JSON.stringify(this.skills)}`);
-    this.apply();
-  }
-
-  // TODO: <??> return previous state on ESC key
-  // undo(event: Event) {
-  //   event.stopPropagation
-  //   console.log(`onEscape. skills: ${JSON.stringify(this.skills)}`);
-  //   this.skills = this._prevSkills.slice();
-  //   this._skillTracker.next();
-  //   this.trySwitchToViewMode();
+  // onBlur(event: Event) {
+  //   //event.stopPropagation();
+  //   console.log(`onblur -> emit: ${JSON.stringify(this.skills)}`);
+  //   this.apply();
   // }
 
-  private apply() {
-    console.log(`apply: ${JSON.stringify(this.skills)}`);
-    //this._prevSkills = this.skills.slice();
-    this.skillsChange.emit(this.skills);
+  // TODO: <??> return previous state on ESC key
+  undo(event: Event) {
+    event.stopPropagation();
+    // Undo avaliable only of view mode turned on
+    if (this.viewModeOff)
+    {
+      return;
+    }
+    this.skills = this._prevSkills.slice();
+    console.log(`onEscape. skills: ${JSON.stringify(this.skills)}`);
+    this._skillTracker.next();
+
+    this.editMode = false;
   }
+  onEnter(event: Event) {
+    event.stopPropagation();
+    console.log(`onEnter.`);
+    this.apply();
+  }
+  apply() {
+    console.log(`apply: ${JSON.stringify(this.skills)}`);
+    console.log(`apply prevSkills: ${JSON.stringify(this._prevSkills)}`);
+    this._prevSkills = this.skills.slice();
+    this.skillsChange.emit(this.skills);
+    if (!this.state$)
+    {
+      this.editMode = false;
+    }
+  }
+
   add(/*skills: string[],*/ event: MatChipInputEvent): void {
 
     const input = event.input;
@@ -157,23 +216,14 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
         }
       }
     }
-    else {
-      // when user just pushes Enter key without adding any skill
 
-      this.apply();
-      this.trySwitchToViewMode();
-    }
     // Reset the input value
     if (input) {
       input.value = '';
     }
     this.skillCtrl.setValue(null);
   }
-  private trySwitchToViewMode() {
-    if (this.visibleSkills.length > 0) {
-      this.editMode = false;
-    }
-  }
+
   remove(skill: SkillVm): void {
     console.log(`remove: ${JSON.stringify(skill)}`);
 
@@ -195,6 +245,18 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     this._skillTracker.next();
   }
 
+  select(event: MatAutocompleteSelectedEvent): void {
+
+    const skill: SkillVm = event.option.value;
+    console.log(`select: ${JSON.stringify(skill)}`);
+
+    this.addOrRestoreSkill(skill);
+
+    this.skillInput.nativeElement.value = '';
+    this.skillCtrl.setValue(null);
+    this._skillTracker.next();
+  }
+
   private addOrRestoreSkill(skill: SkillVm) {
     // in case we are adding removed (before apply) skill, that previously existed
     if (skill.status === SkillStatus.Removed) {
@@ -208,17 +270,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     }
     console.log(`addOrRestoreSkill: ${JSON.stringify(skill)}`);
   }
-  select(event: MatAutocompleteSelectedEvent): void {
 
-    const skill: SkillVm = event.option.value;
-    console.log(`select: ${JSON.stringify(skill)}`);
-
-    this.addOrRestoreSkill(skill);
-
-    this.skillInput.nativeElement.value = '';
-    this.skillCtrl.setValue(null);
-    this._skillTracker.next();
-  }
 
   private filterBySearchText(allSkills: SkillVm[], value: string): SkillVm[] {
     const filterValue = value.toLowerCase();

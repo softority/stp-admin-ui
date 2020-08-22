@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TaskType, TaskComplexity } from 'src/app/core/data-contract';
 import { TaskDataService } from 'src/app/core/services/data.service';
 import { SkillVm } from 'src/app/core/view-models';
+import { TaskService } from 'src/app/core/services/task.service';
 
 
 export interface CreateTaskDialogResult{
@@ -38,8 +39,8 @@ export class CreateTaskDialogComponent implements OnInit {
   skills: SkillVm[] = [];
 
   constructor(
-    private fb: FormBuilder,
-    private dataService: TaskDataService,
+    private _fb: FormBuilder,
+    public taskService: TaskService,
     public dialogRef: MatDialogRef<CreateTaskDialogComponent, CreateTaskDialogResult>,
     @Inject(MAT_DIALOG_DATA) public data: CreateTaskDialogData) {
 
@@ -47,7 +48,7 @@ export class CreateTaskDialogComponent implements OnInit {
       this.title = data.title;
     }
 
-    this.form = fb.group({
+    this.form = _fb.group({
       name: [undefined, Validators.required],
       points: [data.points, [Validators.required, Validators.min(0)]],
       duration: [data.durationMinutes, [Validators.required, Validators.min(1)]],

@@ -47,8 +47,10 @@
             </mat-error>
         </mat-form-field>
         <!-- TODO: embed to the form via implementing ControlValueAccessor interface -->
-        <stp-skills-chips [(skills)]="skills" [editMode]="true"></stp-skills-chips>
-
+        <!-- <stp-skills-chips [(skills)]="skills" [editMode]="true"></stp-skills-chips> -->
+        <stp-skills-chips [(skills)]="skills"
+        [allSkills$]="taskService.allSkills$" 
+        [viewModeOff]="true"></stp-skills-chips>
     </mat-dialog-content>
 
     <mat-dialog-actions>

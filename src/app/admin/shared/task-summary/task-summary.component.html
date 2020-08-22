@@ -8,5 +8,9 @@
     </stp-editable-label>
 
     <!-- <stp-task-name [taskInfo]="data"></stp-task-name> -->
-    <stp-skills-chips [skills]="task.skills" [allSkills$]="allSkills$" (skillsChange)="onSkillsChange($event)"></stp-skills-chips>
+    <stp-skills-chips [skills]="task.skills"
+                      [allSkills$]="allSkills$" 
+                      (skillsChange)="onSkillsChange($event)"
+                      [state$]="skillsStateTracker.asObservable()" 
+                      ></stp-skills-chips>
 </div>

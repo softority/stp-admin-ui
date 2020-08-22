@@ -111,18 +111,18 @@ export class SkillVm {
     status: SkillStatus
 
 
-    getSkillState(): SkillStateDto {
+    static getSkillState(skill: SkillVm): SkillStateDto {
         
-        if (this.status == SkillStatus.Unchanged){
+        if (skill.status == SkillStatus.Unchanged){
             return null;
         }
 
         let res: SkillStateDto = {
-            name: this.name,
-            id: this.id,
+            name: skill.name,
+            id: skill.id,
             state: SkillState.Added
         };
-        switch (this.status) {
+        switch (skill.status) {
             case SkillStatus.Added:
                 res.state = SkillState.Added;
                 break;
@@ -133,7 +133,7 @@ export class SkillVm {
                 res.state = SkillState.New;
                 break;
             default:
-                console.error(`Unexpected SkillStatus: ${this.status}`)
+                console.error(`Unexpected SkillStatus: ${skill.status}`)
                 break;
         }
         return res;

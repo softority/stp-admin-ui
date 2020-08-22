@@ -167,7 +167,7 @@ export class TaskService {
   private getSkillStates(skills: SkillVm[]): SkillStateDto[] {
     const res: SkillStateDto[] = [];
     for (let s of skills.filter(x => x.status !== SkillStatus.Unchanged)) {
-      res.push(s.getSkillState());
+      res.push(SkillVm.getSkillState(s));
     }
     return res;
   }
