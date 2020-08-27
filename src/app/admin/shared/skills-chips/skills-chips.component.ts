@@ -2,14 +2,14 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
-import { Observable, Subject, BehaviorSubject, combineLatest, merge, of } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, combineLatest, merge, of, Subscription } from 'rxjs';
 import { startWith, map, concatMap, switchMap, debounceTime, shareReplay, repeat, tap } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SkillDataService } from 'src/app/core/services/data.service';
 import { SkillVm, SkillStatus } from 'src/app/core/view-models';
 import { state } from '@angular/animations';
 
-export interface SkillsViewConfig {
+export interface SkillsViewState {
   editMode?: boolean;
   processing?: boolean;
   error?: string;
@@ -40,7 +40,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
   allSkills$: Observable<SkillVm[]>;
 
   @Input()
-  state$: Observable<SkillsViewConfig>;
+  state$: Observable<SkillsViewState>;
 
   get editMode(): boolean {
     return this._editMode;
@@ -82,6 +82,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
   private _skills: SkillVm[] = [];
   private _prevSkills: SkillVm[];
   private _editMode: boolean;
+  private _subscription: Subscription = new Subscription();
 
   constructor(private _dataService: SkillDataService) {
 
@@ -119,7 +120,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     }
 
     if (this.state$) {
-      this.state$.subscribe(x => {
+      const s = this.state$.subscribe(x => {
         if (x.editMode !== undefined) {
           this.editMode = x.editMode;
         }
@@ -130,6 +131,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
           this.error = x.error;
         }
       });
+      this._subscription.add(s);
     }
     const skillsWithoutAdded$ = this._skillTracker.pipe(
       startWith([]),
@@ -148,8 +150,10 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
       );
   }
 
+  // TODO: check all subscriptions on unsubscribing
   ngOnDestroy(): void {
-    // TODO: unsubscribe
+    console.log('SkillsChipsComponent.OnDestroy')
+    this._subscription.unsubscribe();
   }
 
   // onBlur(event: Event) {
@@ -158,7 +162,6 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
   //   this.apply();
   // }
 
-  // TODO: <??> return previous state on ESC key
   undo(event: Event) {
     event.stopPropagation();
     // Undo avaliable only of view mode turned on

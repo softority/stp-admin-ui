@@ -3,6 +3,8 @@ import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskD
 import { TaskSectionViewModel } from './interfaces';
 import { TreeItem } from '../shared/utils/arrayToTree';
 import { SkillDataService } from './services/data.service';
+import { EditableLabelState } from '../shared/editable-label/editable-label.component';
+import { Observable, Subject } from 'rxjs';
 
 export class TaskViewModel {
 
@@ -11,7 +13,7 @@ export class TaskViewModel {
 
 
         if (data.taskSummary.type === TaskType.Multichoice) {
-            this.content = new MultichoiceTaskData(data.multichoiceTaskInfo);
+            this.content = MultichoiceTaskData.fromDto(data.multichoiceTaskInfo);
             this.content.taskId = this.header.id;
         }
         // TOOD:
@@ -32,7 +34,7 @@ export class TaskInfo {
         //this.skills = data.skills;
         this.points = data.points;
         this.duration = data.durationMinutes;
-        this.complexity = TaskComplexity[data.complexity];
+        this.complexity = data.complexity;
         this.position = data.position;
 
         for(let s of data.skills){
@@ -46,29 +48,46 @@ export class TaskInfo {
     skills: SkillVm[] = [];
     points: number;
     duration: number;
-    // TODO: Use enum
-    complexity: string;
+    
+    complexity: TaskComplexity;
 
     position?: number;
 }
 
+
+// export interface  StatefulAnswer{
+//     answer: Answer;
+//     nameStateTracker: Subject<EditableLabelState>;
+// }
 export class Answer {
-    constructor(data: MultichoiceTaskAnswerDto) {
-        this.text = data.name;
-        this.isCorrect = data.isCorrect;
-        this.id = data.id;
+    constructor() {
+        //this.nameStateTracker = new Subject<EditableLabelState>();
+    }
+    static fromDto(data: MultichoiceTaskAnswerDto): Answer
+    {
+        let res = new Answer();
+        res.text = data.name;
+        res.isCorrect = data.isCorrect;
+        res.id = data.id;
+        return res;
     }
     id?: number;
-    text: string;
+    text: string; // TODO: Rename to 'name'
     isCorrect: boolean;
+
+    // nameStateTracker: Subject<EditableLabelState>;
 }
 
 export class MultichoiceTaskData {
 
-    constructor(data: MultichoiceTaskInfoDto) {
-        this.question = data.question;
-        this.answers = data.answers.map(x => new Answer(x));
+    static fromDto(data: MultichoiceTaskInfoDto): MultichoiceTaskData
+    {
+        let res = new MultichoiceTaskData();
+        res.question = data.question;
+        res.answers = data.answers.map(x => Answer.fromDto(x));
+        return res;
     }
+
     taskId?: number;
     question: string;
     answers: Answer[];

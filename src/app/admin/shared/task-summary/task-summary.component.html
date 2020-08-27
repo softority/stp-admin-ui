@@ -3,8 +3,10 @@
         <mat-chip class="task-type">{{task.type}}</mat-chip>
         <stp-task-metrics [taskInfo]="task"></stp-task-metrics>
     </div>
-    <stp-editable-label (editCompleted)="onNameEditCompleted($event)" [placeholder]="'Type name here...'"
-        [value]="task.name" [valueObject]="task">
+    <stp-editable-label (editCompleted)="onNameEditCompleted($event)" 
+        [placeholder]="'Type name here...'"
+        [value]="task.name"
+        [state$]="nameStateTracker.asObservable()">
     </stp-editable-label>
 
     <!-- <stp-task-name [taskInfo]="data"></stp-task-name> -->

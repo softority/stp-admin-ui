@@ -1,5 +1,7 @@
 import { TaskSectionViewModel } from 'src/app/core/interfaces'
 import { TaskViewModel, Answer, MultichoiceTaskData} from 'src/app/core/view-models'
+import { TaskListComponent } from '../admin/task-list/task-list.component';
+import { TaskComplexity } from './data-contract';
 
 export const answers: Answer[] = [
   {id: 1, text: 'Addition will produce result 1.', isCorrect: false},
@@ -27,7 +29,7 @@ export const tasks: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: multichoiceData
   },
@@ -40,7 +42,7 @@ export const tasks: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: multichoiceData
   },
@@ -53,7 +55,7 @@ export const tasks: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: multichoiceData
   },
@@ -66,7 +68,7 @@ export const tasks: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: multichoiceData
   },
@@ -81,7 +83,7 @@ export const tasks2: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam porttitor non mauris eu aliquet. Curabitur eros purus, porttitor congue convallis vitae, hendrerit non velit. Nulla facilisi. Sed eros mi, scelerisque in enim sit amet, facilisis efficitur ipsum. Duis ac ex efficitur, ullamcorper lacus ut, varius augue. In hac habitasse platea dictumst. Aliquam lobortis leo ut turpis consequat venenatis. Donec in tortor massa. Donec diam nulla, consequat eget imperdiet nec, lacinia et metus.Nam consequat euismod erat. Etiam eget porttitor massa, nec posuere tellus. Sed imperdiet aliquet dui, nec vulputate massa vulputate sed. Sed nunc magna, tristique efficitur cursus at, bibendum eu dui. Fusce lacinia arcu nunc. Nulla consequat urna id imperdiet iaculis. Phasellus fermentum tristique arcu, ac ullamcorper est finibus nec. Phasellus elementum, felis et pellentesque cursus, sapien lectus convallis justo, a consequat eros turpis vel arcu. Vivamus elementum posuere risus, venenatis laoreet urna porttitor a. Sed a porttitor sem. Phasellus velit erat, lobortis quis augue vel, porta euismod libero. Sed quis finibus sem. Nullam mollis, augue ac elementum dignissim, sem nibh vestibulum arcu, sed auctor sapien augue vehicula diam. Proin sem lectus, pharetra sed interdum sit amet, sollicitudin eu leo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin facilisis quam lectus, vitae mattis urna dapibus at. Nam et facilisis magna, eget dignissim dui. Aliquam bibendum ullamcorper mauris eget eleifend. Phasellus vulputate felis eget quam porttitor finibus. Aenean malesuada est at mattis ornare. Curabitur sed velit sodales, placerat justo vel, iaculis lorem. Fusce id finibus mauris. Donec efficitur eros et justo dignissim auctor. Aenean dictum facilisis purus aliquet venenatis. Donec non dignissim nulla, sit amet molestie erat. Morbi ut velit a ante facilisis tempor non eu ante. Sed vehicula lacus ac turpis ullamcorper, in vehicula magna luctus. Morbi tortor eros, elementum sit amet facilisis id, accumsan non dui. Donec massa ante, eleifend nec lorem quis, blandit accumsan quam. Aliquam lobortis velit vitae enim eleifend, a porta quam dapibus. Nulla venenatis porttitor metus. Nunc nisi ante, tincidunt in elementum vitae, finibus ac mi. Proin ornare arcu et vestibulum posuere. Maecenas quis massa congue, finibus lacus eget, consectetur ex. Vivamus lacinia nulla in risus elementum, at semper lectus congue. Vestibulum ut tincidunt ante. Proin et vehicula odio. Nam luctus, ligula at tristique pulvinar, purus nunc euismod libero, at dapibus quam felis in orci. Phasellus in ornare tellus. Pellentesque vel molestie mauris. Sed sit amet lectus erat. Nullam quis congue mi.'
   },
@@ -94,7 +96,7 @@ export const tasks2: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: '_Content 2'
   },
@@ -107,7 +109,7 @@ export const tasks2: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: '_Content 3'
   },
@@ -120,7 +122,7 @@ export const tasks2: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: '_Content 4'
   },
@@ -135,7 +137,7 @@ export const tasks3: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam porttitor non mauris eu aliquet. Curabitur eros purus, porttitor congue convallis vitae, hendrerit non velit. Nulla facilisi. Sed eros mi, scelerisque in enim sit amet, facilisis efficitur ipsum. Duis ac ex efficitur, ullamcorper lacus ut, varius augue. In hac habitasse platea dictumst. Aliquam lobortis leo ut turpis consequat venenatis. Donec in tortor massa. Donec diam nulla, consequat eget imperdiet nec, lacinia et metus.Nam consequat euismod erat. Etiam eget porttitor massa, nec posuere tellus. Sed imperdiet aliquet dui, nec vulputate massa vulputate sed. Sed nunc magna, tristique efficitur cursus at, bibendum eu dui. Fusce lacinia arcu nunc. Nulla consequat urna id imperdiet iaculis. Phasellus fermentum tristique arcu, ac ullamcorper est finibus nec. Phasellus elementum, felis et pellentesque cursus, sapien lectus convallis justo, a consequat eros turpis vel arcu. Vivamus elementum posuere risus, venenatis laoreet urna porttitor a. Sed a porttitor sem. Phasellus velit erat, lobortis quis augue vel, porta euismod libero. Sed quis finibus sem. Nullam mollis, augue ac elementum dignissim, sem nibh vestibulum arcu, sed auctor sapien augue vehicula diam. Proin sem lectus, pharetra sed interdum sit amet, sollicitudin eu leo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin facilisis quam lectus, vitae mattis urna dapibus at. Nam et facilisis magna, eget dignissim dui. Aliquam bibendum ullamcorper mauris eget eleifend. Phasellus vulputate felis eget quam porttitor finibus. Aenean malesuada est at mattis ornare. Curabitur sed velit sodales, placerat justo vel, iaculis lorem. Fusce id finibus mauris. Donec efficitur eros et justo dignissim auctor. Aenean dictum facilisis purus aliquet venenatis. Donec non dignissim nulla, sit amet molestie erat. Morbi ut velit a ante facilisis tempor non eu ante. Sed vehicula lacus ac turpis ullamcorper, in vehicula magna luctus. Morbi tortor eros, elementum sit amet facilisis id, accumsan non dui. Donec massa ante, eleifend nec lorem quis, blandit accumsan quam. Aliquam lobortis velit vitae enim eleifend, a porta quam dapibus. Nulla venenatis porttitor metus. Nunc nisi ante, tincidunt in elementum vitae, finibus ac mi. Proin ornare arcu et vestibulum posuere. Maecenas quis massa congue, finibus lacus eget, consectetur ex. Vivamus lacinia nulla in risus elementum, at semper lectus congue. Vestibulum ut tincidunt ante. Proin et vehicula odio. Nam luctus, ligula at tristique pulvinar, purus nunc euismod libero, at dapibus quam felis in orci. Phasellus in ornare tellus. Pellentesque vel molestie mauris. Sed sit amet lectus erat. Nullam quis congue mi.'
   },
@@ -148,7 +150,7 @@ export const tasks3: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: '_Content 2'
   },
@@ -161,7 +163,7 @@ export const tasks3: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: '_Content 3'
   },
@@ -174,7 +176,7 @@ export const tasks3: TaskViewModel[] = [
       skills: [],
       points: 20,
       duration: 7,
-      complexity: 'High'
+      complexity: TaskComplexity.High
     },
     content: '_Content 4'
   },

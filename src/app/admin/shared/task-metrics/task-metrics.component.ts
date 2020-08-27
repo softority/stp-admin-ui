@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TaskInfo } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
-import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
+import { EditCompletedEventArgs, EditableLabelState } from 'src/app/shared/editable-label/editable-label.component';
+import { Subject } from 'rxjs';
+import { TaskService } from 'src/app/core/services/task.service';
+import { TaskComplexity } from 'src/app/core/data-contract';
 
 @Component({
   selector: 'stp-task-metrics',
@@ -10,111 +13,88 @@ import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-l
 })
 export class TaskMetricsComponent implements OnInit {
 
-  constructor() { }
+  @Input()
+  taskInfo: TaskInfo;
+
+  pointsTracker: Subject<EditableLabelState> = new Subject<EditableLabelState>();
+  durationTracker: Subject<EditableLabelState> = new Subject<EditableLabelState>();
+
+  constructor(private _taskService: TaskService) { }
 
   ngOnInit(): void {
-    // this.pointsCtrl = new FormControl(this.taskInfo.points, [
-    //   Validators.required,
-    //   Validators.min(0),
-    //   Validators.max(999)
-    // ]);
-
-    this.durationCtrl = new FormControl(this.taskInfo.duration, [
-      Validators.required,
-      Validators.min(0),
-      Validators.max(999)
-    ]);
 
     this.complexityCtrl = new FormControl(this.taskInfo.complexity, [
       Validators.required
     ]);
   }
 
-  @Input()
-  taskInfo: TaskInfo;
-
-  // #region points
-
   onPointsEditCompleted(event: EditCompletedEventArgs) {
-    const taskInfo = event.valueObject as TaskInfo;
-    if (!taskInfo){
-      throw new Error('valueObject expected to exist and to be TaskInfo instance');
-    }
-    if (!event.canceled){
-      taskInfo.points = parseInt(event.value);
-      event.handleValueCallback(true);
-    }
+    const points = parseInt(event.value);
+    this.pointsTracker.next({ processing: true });
+    this._taskService.updateTaskPoints(this.taskInfo.id, points).subscribe(
+      () => {
+        this.taskInfo.points = points;
+        this.pointsTracker.next({ processing: false, editMode: false, error: null });
+      },
+      (err) => {
+        this.pointsTracker.next({ processing: false, editMode: false, error: err.error });
+      }
+    );    
   }
 
   onDurationEditCompleted(event: EditCompletedEventArgs) {
-    const taskInfo = event.valueObject as TaskInfo;
-    if (!taskInfo){
-      throw new Error('valueObject expected to exist and to be TaskInfo instance');
-    }
-    if (!event.canceled){
-      taskInfo.duration = parseInt(event.value);
-      event.handleValueCallback(true);
-    }
+    const duration = parseInt(event.value);
+    this.durationTracker.next({ processing: true });
+    this._taskService.updateTaskDuration(this.taskInfo.id, duration).subscribe(
+      () => {
+        this.taskInfo.duration = duration;
+        this.durationTracker.next({ processing: false, editMode: false, error: null });
+      },
+      (err) => {
+        this.durationTracker.next({ processing: false, editMode: false, error: err.error });
+      }
+    );    
   }
-
-  // pointsCtrl: FormControl;
-  // pointsEditing: boolean;
-
-  // applyPointsEdit(event: Event) {
-  //   event.stopPropagation();
-  //   if (!this.pointsCtrl.valid) {
-  //     return;
-  //   }
-  //   this.taskInfo.points = this.pointsCtrl.value;
-  //   this.pointsEditing = false;
-  // }
-
-  // cancelPointsEdit(event: Event) {
-  //   event.stopPropagation();
-  //   this.pointsCtrl.setValue(this.taskInfo.points);
-  //   this.pointsEditing = false;
-  // }
-
-  // endregion
-
-  // #region duration
-
-  durationCtrl: FormControl;
-  durationEditing: boolean;
-
-  applyDurationEdit(event: Event) {
-    event.stopPropagation();
-    if (!this.durationCtrl.valid) {
-      return;
-    }
-    this.taskInfo.duration = this.durationCtrl.value;
-    this.durationEditing = false;
-  }
-
-  cancelDurationEdit(event: Event) {
-    event.stopPropagation();
-    this.durationCtrl.setValue(this.taskInfo.duration);
-    this.durationEditing = false;
-  }
-
-  // endregion
 
   // #region complexity
 
-  complexityEditing: boolean;
+  complexityEditMode: boolean;
   complexityCtrl: FormControl;
-  complexityValues: string[] = ['High', 'Medium', 'Low'];
-
-  onComplexityChanged(event:Event) {
-    //event.stopPropagation();
-    this.taskInfo.complexity = this.complexityCtrl.value;
-    this.complexityEditing = false;
+  complexityError: string;
+  //complexityValues: string[] = ['High', 'Medium', 'Low'];
+  
+  getComplexityName(value: number) {
+    return TaskComplexity[value];
   }
-// TODO: fix bug: "event.stopPropagation is not a function"
-  stopProp(event: Event){
+  complexityValues: number[] = Object.keys(TaskComplexity)
+    .filter(k => typeof TaskComplexity[k as any] === "string")
+    .map(x => parseInt(x));
+
+
+  onComplexityChanged(event: Event) {
+    //event.stopPropagation();
+    if (!this.complexityCtrl.valid){
+      return;
+    }
+    const complexity = <TaskComplexity>this.complexityCtrl.value;
+    this._taskService.updateTaskComplexity(this.taskInfo.id, complexity).subscribe(
+      () => {
+        this.complexityError = null;
+        this.taskInfo.complexity = complexity;
+      },
+      (err) => {
+        this.complexityError = err.error;
+        this.complexityCtrl.setValue(this.taskInfo.complexity);
+      }
+    );
+    this.taskInfo.complexity = this.complexityCtrl.value;
+    this.complexityEditMode = false;
+  }
+  // TODO: fix bug: "event.stopPropagation is not a function"
+  stopProp(event: Event) {
     event.stopPropagation();
   }
-  // #endregion complexity
 
+  // #endregion complexity
 
 }

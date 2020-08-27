@@ -77,6 +77,12 @@ export interface MultichoiceTaskAnswerDto {
     isCorrect: boolean;
 }
 
+export interface AddTaskAnswerCommand{
+    taskId: number;
+    name: string;
+    isCorrect: boolean;
+}
+
 //#endregion
 
 export interface SkillDto{

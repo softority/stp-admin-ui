@@ -34,10 +34,10 @@
                 <mat-cell *matCellDef="let element">
                     <stp-editable-label 
                         [placeholder]="'Type answer here...'"
-                        [value]="element.text"
-                        [valueObject]="element"
-                        [editing]="(element.id === undefined)"
-                        (editCompleted)="onEditCompleted($event)"
+                        [value]="element.text"                        
+                        [editMode]="(element.id === undefined)"
+                        (editCompleted)="onEditCompleted($event, element)"
+                        (editCanceled)="onEditCanceled(element)"
                         >
 
                     </stp-editable-label>
@@ -67,7 +67,7 @@
             <ng-container matColumnDef="isCorrect">
                 <mat-header-cell *matHeaderCellDef> CORRECT </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                    <mat-checkbox [disabled]="isAnswerPending(element)" [checked]="element.isCorrect"></mat-checkbox>
+                    <mat-checkbox [disabled]="isAnswerPending(element)" [(checked)]="element.isCorrect"></mat-checkbox>
                 </mat-cell>
             </ng-container>
 

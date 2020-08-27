@@ -13,6 +13,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ExpansionPanelComponent } from './expansion-panel/expansion-panel.component';
 import { ExpansionPanelHeaderComponent } from './expansion-panel-header/expansion-panel-header.component';
 import { EditableLabelComponent } from './editable-label/editable-label.component';
+import { EnumSelectComponent } from './enum-select/enum-select.component';
 
 
 const dialogs = [
@@ -29,7 +30,8 @@ const dialogs = [
     ExpansionPanelListComponent,
     ExpansionPanelComponent,
     ExpansionPanelHeaderComponent,
-    EditableLabelComponent
+    EditableLabelComponent,
+    EnumSelectComponent
   ],
   imports: [
     CommonModule,

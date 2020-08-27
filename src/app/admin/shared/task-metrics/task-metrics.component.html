@@ -2,67 +2,44 @@
     <!-- POINTS -->
     <div class="points-viewer">
         <mat-icon inline=true>equalizer</mat-icon>
-        <stp-editable-label #pl (editCompleted)="onPointsEditCompleted($event)" [value]="taskInfo.points"
-            [inputType]="'number'" [valueObject]="taskInfo">
+        <stp-editable-label #pl (editCompleted)="onPointsEditCompleted($event)" 
+            [value]="taskInfo.points"
+            [inputType]="'number'"
+            [state$]="pointsTracker.asObservable()">
         </stp-editable-label>
-        <span [class.hidden]="pl.editing">points</span>
+        <span [class.hidden]="pl.editMode">points</span>
     </div>
-
-    <!-- <div *ngIf="!pointsEditing" class="points-viewer" (click)="pointsEditing=true;$event.stopPropagation()">
-        <mat-icon inline=true>equalizer</mat-icon> <span>{{taskInfo.points}} points</span>
-        <mat-icon class="edit-icon">edit</mat-icon>
-    </div>
-    <div *ngIf="pointsEditing" class="points-editor">
-        <mat-form-field>
-            <input matInput type="number" [formControl]="pointsCtrl" (keydown.enter)="applyPointsEdit($event)"
-                (keydown.escape)="cancelPointsEdit($event)" (keydown.space)="$event.stopPropagation()"
-                (click)="$event.stopPropagation()" autofocus />
-            <mat-error>Invalid value</mat-error>
-        </mat-form-field>
-        <mat-icon (click)="applyPointsEdit($event)">done</mat-icon>
-        <mat-icon (click)="cancelPointsEdit($event)">clear</mat-icon>
-    </div> -->
 
     <!-- DURATION -->
-
     <div class="points-viewer">
         <mat-icon inline=true>timer</mat-icon>
         <stp-editable-label #dl (editCompleted)="onDurationEditCompleted($event)"
             [value]="taskInfo.duration"
             [inputType]="'number'"
-            [valueObject]="taskInfo">
+            [state$]="durationTracker.asObservable()">
         </stp-editable-label>
-        <span [class.hidden]="dl.editing">minutes</span>
+        <span [class.hidden]="dl.editMode">minutes</span>
     </div>
-
-    <!-- <div *ngIf="!durationEditing" class="duration-viewer" (click)="durationEditing=true;$event.stopPropagation()">
-        <mat-icon inline=true>timer</mat-icon> <span>{{taskInfo.duration}} minutes</span>
-        <mat-icon class="edit-icon">edit</mat-icon>
-    </div>
-    <div *ngIf="durationEditing" class="duration-editor">
-        <mat-form-field>
-            <input matInput type="number" [formControl]="durationCtrl" (keydown.enter)="applyDurationEdit($event)"
-                (keydown.escape)="cancelDurationEdit($event)" (keydown.space)="$event.stopPropagation()"
-                (click)="$event.stopPropagation()" autofocus />
-            <mat-error>Invalid value</mat-error>
-        </mat-form-field>
-        <mat-icon (click)="applyDurationEdit($event)">done</mat-icon>
-        <mat-icon (click)="cancelDurationEdit($event)">clear</mat-icon>
-    </div> -->
 
     <!-- COMPLEXITY -->
-    <div *ngIf="!complexityEditing" class="complexity-viewer" (click)="complexityEditing=true">
-        <mat-chip class="{{taskInfo.complexity.toLocaleLowerCase()}}">{{taskInfo.complexity}}</mat-chip>
+    <div *ngIf="!complexityEditMode" class="complexity-viewer" (click)="complexityEditMode=true">
+        <mat-chip class="{{getComplexityName(taskInfo.complexity).toLocaleLowerCase()}}">{{getComplexityName(taskInfo.complexity)}}</mat-chip>
         <mat-icon class="edit-icon">edit</mat-icon>
     </div>
-    <div *ngIf="complexityEditing" class="complexity-editor">
+    <div *ngIf="complexityEditMode" class="complexity-editor">
         <mat-form-field>
-            <mat-select [formControl]="complexityCtrl" (selectionChange)="onComplexityChanged($event)" required>
+            <!-- <mat-select [formControl]="complexityCtrl" (selectionChange)="onComplexityChanged($event)" required>
                 <mat-option *ngFor="let complexity of complexityValues" [value]="complexity">
                     {{complexity}}
                 </mat-option>
+            </mat-select> -->
+            <mat-select [formControl]="complexityCtrl" required>
+                <mat-option *ngFor="let complexity of complexityValues" [value]="complexity">
+                    {{getComplexityName(complexity)}}
+                </mat-option>
             </mat-select>
             <mat-error *ngIf="complexityCtrl.hasError('required')">Please choose complexity</mat-error>
+            <mat-error *ngIf="complexityError">{{complexityError}}</mat-error>
         </mat-form-field>
     </div>
 </div>

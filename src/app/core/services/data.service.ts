@@ -4,7 +4,7 @@ import { tasks } from '../example-data';
 import { TaskViewModel, Answer, MultichoiceTaskData } from '../view-models';
 import { delay, tap, map, switchMap, flatMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { TaskDto, TaskCategoryDto, CreateCategoryCommand, CreateTaskCommand, SkillDto, SkillStateDto } from '../data-contract';
+import { TaskDto, TaskCategoryDto, CreateCategoryCommand, CreateTaskCommand, SkillDto, SkillStateDto, TaskComplexity, MultichoiceTaskAnswerDto, AddTaskAnswerCommand } from '../data-contract';
 
 export interface Result<T> {
   ok: boolean;
@@ -81,6 +81,33 @@ export class TaskCategoryDataService {
 @Injectable({
   providedIn: 'root'
 })
+export class MultichoiceTaskAnswerDataService {
+
+  constructor(private http: HttpClient) {
+  }
+
+  addTaskAnswer(cmd: AddTaskAnswerCommand): Observable<MultichoiceTaskAnswerDto> {
+    console.log(`addTaskAnswer. taskId:${cmd.taskId}, name:${cmd.name} -->`);
+    const res$ = this.http.post<MultichoiceTaskAnswerDto>(`${baseUrl}/api/MultichoiceTaskAnswer/AddTaskAnswer`, cmd);
+    return res$;
+  }
+
+  updateTaskAnswer(answer: MultichoiceTaskAnswerDto) {
+    console.log(`updateTaskAnswer. id:${answer.id}, name:${answer.name} -->`);
+    const res$ = this.http.put(`${baseUrl}/api/MultichoiceTaskAnswer/UpdateTaskAnswer`, answer);
+    return res$;
+  }
+
+  deleteTaskAnswer(answerId: number) {
+    console.log(`deleteTaskAnswer. id:${answerId} -->`);
+    const res$ = this.http.delete(`${baseUrl}/api/MultichoiceTaskAnswer/DeleteTaskAnswer/${answerId}`);
+    return res$;
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class TaskDataService {
 
   constructor(private http: HttpClient) {
@@ -98,6 +125,33 @@ export class TaskDataService {
     return res$;
   }
 
+  updateTaskPoints(taskId: number, points: number) {
+    console.log(`updateTaskPoints. taskId:${taskId}, points:${points} -->`);
+    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskPoints/${taskId}`, JSON.stringify(points));
+    return res$;
+  }
+  updateTaskComplexity(taskId: number, complexity: TaskComplexity) {
+    console.log(`updateTaskComplexity. taskId:${taskId}, complexity:${complexity} -->`);
+    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskComplexity/${taskId}`, JSON.stringify(complexity));
+    return res$;
+  }
+  updateTaskDuration(taskId: number, duration: number) {
+    console.log(`updateTaskDUration. taskId:${taskId}, duration:${duration} -->`);
+    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskDuration/${taskId}`, JSON.stringify(duration));
+    return res$;
+  }
+
+  updateTaskName(taskId: number, name: string) {
+    console.log(`updateTaskName. taskId:${taskId}, name:${name} -->`);
+    const res$ = this.http.put(
+      `${baseUrl}/api/Task/UpdateTaskName/${taskId}`, 
+      JSON.stringify(name),
+      {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    return res$;
+  }
+
   updateSkills(taskId: number, skills: SkillStateDto[]): Observable<SkillDto[]> {
     console.log(`updateSkills. taskId:${taskId} -->`);
     const res$ = this.http.put<SkillDto[]>(`${baseUrl}/api/Task/UpdateSkills/${taskId}`, skills);
@@ -105,7 +159,7 @@ export class TaskDataService {
   }
 
   updateTaskPosition(taskId: number, position: number) {
-    const res$ = this.http.put<TaskCategoryDto>(
+    const res$ = this.http.put(
       `${baseUrl}/api/TaskCategory/UpdateTaskPosition/${taskId}`,
       JSON.stringify(position),
       {

@@ -27,26 +27,14 @@ export class TestListComponent implements OnInit {
 
   sectionsVm: TaskSectionViewModel[] = sections;
 
-  onTaskNameEditCompleted(event: EditCompletedEventArgs) {
-    const taskInfo = event.valueObject as TaskInfo;
-    if (!taskInfo) {
-      throw new Error('valueObject expected to exist and to be TaskInfo instance');
-    }
-    if (!event.canceled) {
+  onTaskNameEditCompleted(event: EditCompletedEventArgs, taskInfo: TaskInfo) {
       taskInfo.name = event.value;
-      event.handleValueCallback(true);
-    }
+      event.source.editMode = false;
   }
 
-  onSectionNameEditCompleted(event: EditCompletedEventArgs) {
-    const sectionInfo = event.valueObject as TaskSectionInfo;
-    if (!sectionInfo) {
-      throw new Error('valueObject expected to exist and to be TaskSectionInfo instance');
-    }
-    if (!event.canceled) {
+  onSectionNameEditCompleted(event: EditCompletedEventArgs, sectionInfo: TaskSectionInfo) {
       sectionInfo.name = event.value;
-      event.handleValueCallback(true);
-    }
+      event.source.editMode = false;
   }
 
   moveSection(event: CdkDragDrop<TaskSectionInfo[]>) {

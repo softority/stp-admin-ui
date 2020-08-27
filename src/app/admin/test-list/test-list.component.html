@@ -8,10 +8,9 @@ TESTS:
 
     <div class="section-header-container">
         <stp-editable-label
-            (editCompleted)="onSectionNameEditCompleted($event)"
+            (editCompleted)="onSectionNameEditCompleted($event, data)"
             [placeholder]="'Type name here...'"
-            [value]="data.name"
-            [valueObject]="data">
+            [value]="data.name">
         </stp-editable-label>
     </div>
 
@@ -32,10 +31,9 @@ TESTS:
             <stp-task-metrics [taskInfo]="data"></stp-task-metrics>
         </div>
         <stp-editable-label
-            (editCompleted)="onTaskNameEditCompleted($event)"
+            (editCompleted)="onTaskNameEditCompleted($event, data)"
             [placeholder]="'Type name here...'"
-            [value]="data.name"
-            [valueObject]="data">
+            [value]="data.name">
         </stp-editable-label>
 
         <!-- <stp-task-name [taskInfo]="data"></stp-task-name> -->

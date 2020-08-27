@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { TaskDataService, SkillDataService } from './data.service';
-import { TaskViewModel, TaskInfo, SkillVm, SkillStatus } from '../view-models';
+import { TaskDataService, SkillDataService, MultichoiceTaskAnswerDataService } from './data.service';
+import { TaskViewModel, TaskInfo, SkillVm, SkillStatus, Answer } from '../view-models';
 import { Observable, throwError, BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
 import { switchMap, catchError, flatMap, map, share, publishLast, refCount, tap, switchMapTo, publish, startWith, mergeMap, shareReplay } from 'rxjs/operators';
-import { CreateTaskCommand, SkillStateDto } from '../data-contract';
+import { CreateTaskCommand, SkillStateDto, TaskComplexity, AddTaskAnswerCommand, MultichoiceTaskAnswerDto } from '../data-contract';
 import { ActivatedRoute } from '@angular/router';
 import { CreateTaskDialogResult } from 'src/app/admin/create-task-dialog/create-task-dialog.component';
+import { TaskListComponent } from 'src/app/admin/task-list/task-list.component';
 
 // Manages the tasks
 // Load the tasks by category, applies the filter 
@@ -32,6 +33,7 @@ export class TaskService {
   constructor(
     private _taskDataService: TaskDataService,
     private _skillDataService: SkillDataService,
+    private _mcAnswersDataService: MultichoiceTaskAnswerDataService
   ) {
 
     // this._categoryTracker.pipe(
@@ -85,6 +87,33 @@ export class TaskService {
     return this._tasks$;
   }
 
+  addTaskAnswer(cmd: AddTaskAnswerCommand): Observable<Answer> {
+    const res$ = this._mcAnswersDataService.addTaskAnswer(cmd).pipe(
+      map(x => Answer.fromDto(x)),
+    );
+    return res$;
+  }
+
+  updateTaskAnswer(answer: MultichoiceTaskAnswerDto) {
+    if (!answer.id) {
+      throw new Error('Answer must have an id');
+    }
+    const res$ = this._mcAnswersDataService.updateTaskAnswer({
+      id: answer.id,
+      name: answer.name,
+      isCorrect: answer.isCorrect
+    }).pipe(
+      catchError((err) => { alert(err.error); return throwError(err); })
+    );
+    return res$;
+  }
+
+  deleteTaskAnswer(answerId: number) {
+    const res$ = this._mcAnswersDataService.deleteTaskAnswer(answerId).pipe(
+      catchError((err) => { alert(err.error); return throwError(err); })
+    );
+    return res$;
+  }
   updateSkills(taskId: number, skills: SkillVm[]): Observable<SkillVm[]> {
     const dto: SkillStateDto[] = this.getSkillStates(skills);
     if (dto.length === 0) {
@@ -98,8 +127,8 @@ export class TaskService {
     return res$;
   }
 
-  private refreshAllSkillsIfNeeded(skills: SkillVm[]){
-    if (skills.find(x => x.status === SkillStatus.New)){
+  private refreshAllSkillsIfNeeded(skills: SkillVm[]) {
+    if (skills.find(x => x.status === SkillStatus.New)) {
       console.log(`refreshAllSkillsIfNeeded. _skillsTracker.next()`)
       // refresh allSkills local catalog 
       this._skillsTracker.next()
@@ -138,6 +167,32 @@ export class TaskService {
     //   this._tasks.getValue().push(res);
     //   this._tasks.next(this._tasks.getValue());
     // });
+  }
+
+  updateTaskDuration(taskId: number, duration: number) {
+    const res$ = this._taskDataService.updateTaskDuration(taskId, duration).pipe(
+      catchError((err) => { alert(err.error); return throwError(err); })
+    );
+    return res$;
+  }
+
+  updateTaskPoints(taskId: number, points: number) {
+    const res$ = this._taskDataService.updateTaskPoints(taskId, points).pipe(
+      catchError((err) => { alert(err.error); return throwError(err); })
+    );
+    return res$;
+  }
+  updateTaskComplexity(taskId: number, complexity: TaskComplexity) {
+    const res$ = this._taskDataService.updateTaskComplexity(taskId, complexity).pipe(
+      catchError((err) => { alert(err.error); return throwError(err); })
+    );
+    return res$;
+  }
+  updateTaskName(taskId: number, name: string) {
+    const res$ = this._taskDataService.updateTaskName(taskId, name).pipe(
+      catchError((err) => { alert(err.error); return throwError(err); })
+    );
+    return res$;
   }
 
   updateTaskPosition(taskId: number, newPosition: number): Observable<TaskViewModel[]> {
