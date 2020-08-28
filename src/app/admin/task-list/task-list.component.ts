@@ -78,7 +78,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
     })
   }
   
-  moveTask(event: CdkDragDrop<TaskInfo>) {
+  moveTask(event: CdkDragDrop<TaskViewModel[]>) {
     console.log('moveTask:');
     console.log(event);
 
@@ -86,13 +86,13 @@ export class TaskListComponent implements OnInit, OnDestroy {
       console.error("Unable to get dropping item data!");
       return;
     }
-    const tasks = event.item.data as TaskInfo[];
+    const tasks = event.item.data as TaskViewModel[] ;
     if (tasks === undefined || tasks.length === 0) {
       console.error("Dropping item data is incorrect!");
       return;
     }
-    const taskId = tasks[event.previousIndex].id;
-    const newPosition = tasks[event.currentIndex].position;
+    const taskId = tasks[event.previousIndex].header.id;
+    const newPosition = tasks[event.currentIndex].header.position;
 
     this._subscription.add(
       this.taskService.updateTaskPosition(taskId, newPosition)

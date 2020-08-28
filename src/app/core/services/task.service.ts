@@ -75,8 +75,11 @@ export class TaskService {
     if (this._categoryId === undefined) {
       throw new Error('Service is not initialized! categoryId is undefined');
     }
-    this._taskDataService.getTasksByCategory(this._categoryId).pipe(
+    this._taskDataService.getTasksByCategory(this._categoryId).pipe(      
+      map(x => x.sort((a, b)=> a.taskSummary.position - b.taskSummary.position)),
       map(((x) => x.map((y => new TaskViewModel(y)))))
+      //map(x => x.sort(y => y.header.position))
+
     ).subscribe(
       res => {
         this._tasksStore.items = res;

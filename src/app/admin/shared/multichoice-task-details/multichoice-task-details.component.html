@@ -67,7 +67,7 @@
             <ng-container matColumnDef="isCorrect">
                 <mat-header-cell *matHeaderCellDef> CORRECT </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                    <mat-checkbox [disabled]="isAnswerPending(element)" [(checked)]="element.isCorrect"></mat-checkbox>
+                    <mat-checkbox [disabled]="isAnswerPending(element)" (change)="onCheckedChanged($event, element)" [checked]="element.isCorrect"></mat-checkbox>
                 </mat-cell>
             </ng-container>
 

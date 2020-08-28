@@ -33,7 +33,7 @@
                     {{complexity}}
                 </mat-option>
             </mat-select> -->
-            <mat-select [formControl]="complexityCtrl" required>
+            <mat-select [formControl]="complexityCtrl" (selectionChange)="onComplexityChanged($event)" required>
                 <mat-option *ngFor="let complexity of complexityValues" [value]="complexity">
                     {{getComplexityName(complexity)}}
                 </mat-option>

@@ -93,7 +93,7 @@ export class MultichoiceTaskAnswerDataService {
   }
 
   updateTaskAnswer(answer: MultichoiceTaskAnswerDto) {
-    console.log(`updateTaskAnswer. id:${answer.id}, name:${answer.name} -->`);
+    console.log(`updateTaskAnswer. asnwer: ${JSON.stringify(answer)} -->`);
     const res$ = this.http.put(`${baseUrl}/api/MultichoiceTaskAnswer/UpdateTaskAnswer`, answer);
     return res$;
   }
@@ -127,17 +127,30 @@ export class TaskDataService {
 
   updateTaskPoints(taskId: number, points: number) {
     console.log(`updateTaskPoints. taskId:${taskId}, points:${points} -->`);
-    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskPoints/${taskId}`, JSON.stringify(points));
+    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskPoints/${taskId}`,
+    JSON.stringify(points),
+    {
+      headers: { 'Content-Type': 'application/json' }
+    }
+    );
     return res$;
   }
   updateTaskComplexity(taskId: number, complexity: TaskComplexity) {
     console.log(`updateTaskComplexity. taskId:${taskId}, complexity:${complexity} -->`);
-    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskComplexity/${taskId}`, JSON.stringify(complexity));
+    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskComplexity/${taskId}`, 
+    JSON.stringify(complexity),
+    {
+      headers: { 'Content-Type': 'application/json' }
+    });
     return res$;
   }
   updateTaskDuration(taskId: number, duration: number) {
     console.log(`updateTaskDUration. taskId:${taskId}, duration:${duration} -->`);
-    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskDuration/${taskId}`, JSON.stringify(duration));
+    const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskDuration/${taskId}`, 
+    JSON.stringify(duration),
+    {
+      headers: { 'Content-Type': 'application/json' }
+    });
     return res$;
   }
 
@@ -159,8 +172,9 @@ export class TaskDataService {
   }
 
   updateTaskPosition(taskId: number, position: number) {
+    console.log(`updateTaskPosition. taskId:${taskId}, position:${position} -->`);
     const res$ = this.http.put(
-      `${baseUrl}/api/TaskCategory/UpdateTaskPosition/${taskId}`,
+      `${baseUrl}/api/Task/UpdateTaskPosition/${taskId}`,
       JSON.stringify(position),
       {
         headers: { 'Content-Type': 'application/json' }

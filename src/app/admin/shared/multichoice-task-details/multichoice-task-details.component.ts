@@ -5,6 +5,7 @@ import { DataService } from 'src/app/core/services/data.service';
 import { allowedNodeEnvironmentFlags } from 'process';
 import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
 import { TaskService } from 'src/app/core/services/task.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 
 @Component({
@@ -100,7 +101,7 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
 
           //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: false, error: null });
           event.source.processing = false;
-          event.source.editMode = false;          
+          event.source.editMode = false;
           event.source.error = null;
 
           this._pendingAnswer = undefined;
@@ -108,9 +109,9 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
         (err) => {
           //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: true, error: err.error, value: answer.text });
           event.source.processing = false;
-          event.source.editMode = true;          
+          event.source.editMode = true;
           event.source.error = err.error;
-          event.source.value = answer.text;          
+          event.source.value = answer.text;
         }
       );
     }
@@ -125,16 +126,16 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
           answer.text = event.value;
           //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: false, error: null });
           event.source.processing = false;
-          event.source.editMode = false;          
+          event.source.editMode = false;
           event.source.error = null;
           this._pendingAnswer = undefined;
         },
         (err) => {
           //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: true, error: err.error, value: answer.text });
           event.source.processing = false;
-          event.source.editMode = true;          
+          event.source.editMode = true;
           event.source.error = err.error;
-          event.source.value = answer.text;          
+          event.source.value = answer.text;
         }
       );
     }
@@ -215,10 +216,35 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     this.addAnswerInternal(newAnswer);
     //this._editableAnswer = newAnswer;
   }
+  onCheckedChanged(event: MatCheckboxChange, answer: Answer) {
+    const isCorrect = event.checked;
+    if (answer.id === undefined) {
+      answer.isCorrect = isCorrect;
+    }
+    else {
+      this._pendingAnswer = answer;
+      this._taskService.updateTaskAnswer({
+        id: answer.id,
+        isCorrect: isCorrect,
+        name: answer.text
+      }).subscribe(
+        () => {
+          answer.isCorrect = isCorrect;
+          this._pendingAnswer = undefined;
+        },
+        (err) => {
+          // TODO: fix
+          event.checked = answer.isCorrect;
+        }
+      );
+    }
+  }
 
   deleteAnswer(answer: Answer) {
     if (!answer.id) {
-      throw new Error("Anwer must have an id");
+      // if this is just added answer that hasn't been created on the server
+      this.removeAnswerInternal(answer);
+      return;
     }
     //this._pendingAnswer.nameStateTracker.next({ processing: true });
     this._pendingAnswer = answer;
