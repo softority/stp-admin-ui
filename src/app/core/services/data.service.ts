@@ -128,7 +128,7 @@ export class TaskDataService {
   updateTaskPoints(taskId: number, points: number) {
     console.log(`updateTaskPoints. taskId:${taskId}, points:${points} -->`);
     const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskPoints/${taskId}`,
-    JSON.stringify(points),
+    points,
     {
       headers: { 'Content-Type': 'application/json' }
     }
@@ -138,7 +138,7 @@ export class TaskDataService {
   updateTaskComplexity(taskId: number, complexity: TaskComplexity) {
     console.log(`updateTaskComplexity. taskId:${taskId}, complexity:${complexity} -->`);
     const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskComplexity/${taskId}`, 
-    JSON.stringify(complexity),
+    complexity,
     {
       headers: { 'Content-Type': 'application/json' }
     });
@@ -147,7 +147,7 @@ export class TaskDataService {
   updateTaskDuration(taskId: number, duration: number) {
     console.log(`updateTaskDUration. taskId:${taskId}, duration:${duration} -->`);
     const res$ = this.http.put(`${baseUrl}/api/Task/UpdateTaskDuration/${taskId}`, 
-    JSON.stringify(duration),
+    duration,
     {
       headers: { 'Content-Type': 'application/json' }
     });

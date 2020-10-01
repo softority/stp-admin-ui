@@ -104,8 +104,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
     // this.tasksVm[event.currentIndex] = tmp;
   }
 
-  
-
   private loadData(categoryId: number) {
     this.loading = true;
     this.tasksVm$ = this.taskService.getTasks(categoryId);

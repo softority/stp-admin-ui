@@ -27,6 +27,7 @@ export class TaskViewModel {
 
 export class TaskInfo {
 
+    // TODO: create static factory method instead
     constructor(data: TaskSummaryDto) {
         this.id = data.id;
         this.name = data.name;
@@ -37,9 +38,14 @@ export class TaskInfo {
         this.complexity = data.complexity;
         this.position = data.position;
 
-        for(let s of data.skills){
+        for (let s of data.skills) {
             this.skills.push(SkillVm.fromDto(s))
         }
+
+        this.state = {
+            editMode: data.id ? true : false,
+            value: data.name
+        };
     }
 
     id: number;
@@ -48,10 +54,10 @@ export class TaskInfo {
     skills: SkillVm[] = [];
     points: number;
     duration: number;
-    
     complexity: TaskComplexity;
-
     position?: number;
+
+    state: EditableLabelState<string>;
 }
 
 
@@ -61,27 +67,32 @@ export class TaskInfo {
 // }
 export class Answer {
     constructor() {
-        //this.nameStateTracker = new Subject<EditableLabelState>();
+       //this.nameStateTracker = new Subject<EditableLabelState>();
+       
     }
-    static fromDto(data: MultichoiceTaskAnswerDto): Answer
-    {
+    static fromDto(data: MultichoiceTaskAnswerDto): Answer {
         let res = new Answer();
-        res.text = data.name;
+        res.name = data.name;
         res.isCorrect = data.isCorrect;
         res.id = data.id;
+        res.state = {
+            editMode: data.id ? false : true,
+            value: data.name
+        };
         return res;
     }
     id?: number;
-    text: string; // TODO: Rename to 'name'
+    name: string;
     isCorrect: boolean;
 
+    state: EditableLabelState<string>;
     // nameStateTracker: Subject<EditableLabelState>;
 }
 
+
 export class MultichoiceTaskData {
 
-    static fromDto(data: MultichoiceTaskInfoDto): MultichoiceTaskData
-    {
+    static fromDto(data: MultichoiceTaskInfoDto): MultichoiceTaskData {
         let res = new MultichoiceTaskData();
         res.question = data.question;
         res.answers = data.answers.map(x => Answer.fromDto(x));
@@ -106,6 +117,7 @@ export enum SkillStatus {
     Added,
     Removed
 }
+
 export class SkillVm {
     private constructor() {
     }
@@ -131,8 +143,8 @@ export class SkillVm {
 
 
     static getSkillState(skill: SkillVm): SkillStateDto {
-        
-        if (skill.status == SkillStatus.Unchanged){
+
+        if (skill.status == SkillStatus.Unchanged) {
             return null;
         }
 
@@ -157,8 +169,6 @@ export class SkillVm {
         }
         return res;
     }
-     
-    
 }
 
 

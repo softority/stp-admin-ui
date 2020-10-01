@@ -81,10 +81,13 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     }
   }
 
-  onEditCompleted(event: EditCompletedEventArgs, answer: Answer) {
+  onEditCompleted(event: EditCompletedEventArgs<string>, answer: Answer) {
 
     this._pendingAnswer = answer;
-    event.source.processing = true;
+    answer.state = {
+      processing: true
+    };
+    //event.source.processing = true;
     //this._pendingAnswer.nameStateTracker.next({ processing: true });
 
     // if this is new, just added answer
@@ -96,22 +99,36 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
       }).subscribe(
         (res) => {
           answer.id = res.id;
-          answer.text = res.text;
+          answer.name = res.name;
           answer.isCorrect = res.isCorrect;
 
+          answer.state = {
+            processing: false,
+            editMode: false,
+            error: null,
+            value: res.name
+          };
           //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: false, error: null });
-          event.source.processing = false;
-          event.source.editMode = false;
-          event.source.error = null;
+          // event.source.processing = false;
+          // event.source.editMode = false;
+          // event.source.error = null;
 
           this._pendingAnswer = undefined;
         },
         (err) => {
+
+          answer.state = {
+            processing: false,
+            editMode: false,
+            error: null, 
+            value: answer.name
+          };
+
           //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: true, error: err.error, value: answer.text });
-          event.source.processing = false;
-          event.source.editMode = true;
-          event.source.error = err.error;
-          event.source.value = answer.text;
+          // event.source.processing = false;
+          // event.source.editMode = true;
+          // event.source.error = err.error;
+          // event.source.value = answer.name;
         }
       );
     }
@@ -123,87 +140,29 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
         name: event.value
       }).subscribe(
         () => {
-          answer.text = event.value;
+          //answer.name = event.value;
           //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: false, error: null });
-          event.source.processing = false;
-          event.source.editMode = false;
-          event.source.error = null;
+          answer.state = {
+            processing: false,
+            editMode: false,
+            error: null,
+            value: event.value
+          };
           this._pendingAnswer = undefined;
         },
         (err) => {
           //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: true, error: err.error, value: answer.text });
-          event.source.processing = false;
-          event.source.editMode = true;
-          event.source.error = err.error;
-          event.source.value = answer.text;
+
+          answer.state = {
+            processing: false,
+            editMode: true,
+            error: err.error,
+            value: answer.name
+          };          
         }
       );
     }
-    //   this._dataService.addAnswer(this.data.taskId, answer)
-    //     .subscribe(res => {
-
-    //       if (!res) {
-    //         alert('Adding answer failed. ' + res.message);
-    //       }
-    //       event.handleValueCallback(res.ok);
-    //       this._pendingAnswer = undefined;
-    //     },
-    //       err => {
-    //         alert('Adding answer failed. ' + err);
-    //         event.handleValueCallback(false);
-    //         this._pendingAnswer = undefined;
-    //       });
-    // }
-    // else {
-    //   if (!event.canceled) {
-    //     answer.text = event.value;
-    //     event.handleValueCallback(true);
-    //   }
-    // }
-    //setTimeout(() => event.handleValueCallback(true), 2000);    
   }
-
-  // applyAnswerEdit(event: Event, answer: Answer, input: HTMLInputElement) {
-  //   event.stopPropagation();
-  //   this._pendingAnswer = answer;
-
-  //   answer.text = input.value;
-
-  //   // if this is new, just added answer
-  //   if (answer.id === undefined) {
-  //     this._dataService.addAnswer(this.data.taskId, answer)
-  //       .subscribe(res => {
-  //         this._pendingAnswer = undefined;
-  //         this._editableAnswer = undefined;
-  //         if (!res) {
-  //           alert('Adding answer failed. ' + res.message);
-  //         }
-  //       },
-  //         err => {
-  //           alert('Adding answer failed. ' + err);
-  //         });
-  //   }
-  // }
-
-  // cancelAnswerEdit(event: Event, answer: Answer, input: HTMLInputElement) {
-  //   event.stopPropagation();
-  //   this._editableAnswer = undefined;
-
-  //   // if this is new, just added answer
-  //   if (answer.id === undefined) {
-  //     // remove answer which about to add
-  //     this.removeAnswerInternal(answer);
-  //   }
-  //   else {
-  //     input.value = answer.text;
-  //   }
-  // }
-
-  // TODO: Hide editor without focus when clicking outside
-  // onEditorFocusout(event: Event){
-  //   event.stopPropagation();
-  //   this._editableAnswer = undefined;
-  // }
 
   addAnswer(event: MouseEvent) {
     // TODO: quick decision. Improve UX.
@@ -212,6 +171,10 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
       return;
     }
     const newAnswer = new Answer();
+    newAnswer.state = {
+      editMode: true,
+      value: ''
+    };
     // { text: '', isCorrect: false };
     this.addAnswerInternal(newAnswer);
     //this._editableAnswer = newAnswer;
@@ -226,7 +189,7 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
       this._taskService.updateTaskAnswer({
         id: answer.id,
         isCorrect: isCorrect,
-        name: answer.text
+        name: answer.name
       }).subscribe(
         () => {
           answer.isCorrect = isCorrect;

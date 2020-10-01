@@ -4,15 +4,14 @@
         <stp-task-metrics [taskInfo]="task"></stp-task-metrics>
     </div>
     <stp-editable-label (editCompleted)="onNameEditCompleted($event)" 
-        [placeholder]="'Type name here...'"
-        [value]="task.name"
-        [state$]="nameStateTracker.asObservable()">
+        [placeholder]="'Type name here...'"        
+        [state]="nameStateTracker | async">
     </stp-editable-label>
 
     <!-- <stp-task-name [taskInfo]="data"></stp-task-name> -->
     <stp-skills-chips [skills]="task.skills"
-                      [allSkills$]="allSkills$" 
+                      [allSkills$]="taskService.allSkills$" 
                       (skillsChange)="onSkillsChange($event)"
-                      [state$]="skillsStateTracker.asObservable()" 
+                      [state]="skillsStateTracker | async" 
                       ></stp-skills-chips>
 </div>

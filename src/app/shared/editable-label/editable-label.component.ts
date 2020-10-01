@@ -3,25 +3,25 @@ import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 
-export interface EditCompletedEventArgs {
-  value: string;
-  source: EditableLabelInterface;
+export interface EditCompletedEventArgs<T extends string | number> {
+  value: T;
+  //source: EditableLabelInterface;
   //canceled: boolean;
   //valueObject?: Object;
   //handleValueCallback?: (ok: boolean) => void;
 }
-export interface EditableLabelInterface {
-  editMode: boolean;
-  processing: boolean;
-  error: string;
-  value: string;
-}
+// export interface EditableLabelInterface {
+//   editMode: boolean;
+//   processing: boolean;
+//   error: string;
+//   value: string;
+// }
 
-export interface EditableLabelState {
+export interface EditableLabelState<T extends string | number> {
   editMode?: boolean;
   processing?: boolean;
   error?: string;
-  value?: string;
+  value?: T;
 }
 
 @Component({
@@ -29,28 +29,47 @@ export interface EditableLabelState {
   templateUrl: './editable-label.component.html',
   styleUrls: ['./editable-label.component.scss']
 })
-export class EditableLabelComponent implements OnInit, EditableLabelInterface {
+export class EditableLabelComponent implements OnInit {
 
   @Input()
   placeholder: string;
 
   @Input()
-  value: string;
-
-  @Input()
-  state$: Observable<EditableLabelState>;
-
-  @Input()
   inputType: string = 'text';
 
-  @Input()
-  editMode: boolean = false;
-
   @Output()
-  public editCompleted = new EventEmitter<EditCompletedEventArgs>();
+  public editCompleted = new EventEmitter<EditCompletedEventArgs<string | number>>();
 
   @Output()
   public editCanceled = new EventEmitter();
+
+  @Input()
+  set state(value: EditableLabelState<string | number>){
+    console.log(`EditableLabelComponent. set state: ${JSON.stringify(value)}`);
+    if (value) {
+      if (value.editMode !== undefined) {
+        this.editMode = value.editMode;
+      }
+      if (value.processing !== undefined) {
+        this.processing = value.processing ;
+      }
+      if (value.error !== undefined) {
+        this.error = value.error;
+      }
+      if (value.value !== undefined) {
+        this.value = value.value;
+        this.valueCtrl.setValue(value.value);
+      }
+    }
+  }
+
+  value: string | number;
+  editMode: boolean = false;
+  error: string;
+  valueCtrl: FormControl;
+  processing: boolean = false;
+
+  private _state: EditableLabelState<string | number>;
 
   //@ViewChild(HTMLInputElement) input:HTMLInputElement;
 
@@ -67,32 +86,13 @@ export class EditableLabelComponent implements OnInit, EditableLabelInterface {
     console.log(`onBlur(): ${new Date()} - ${JSON.stringify(target)}`);
   }
 
-  error: string;
-  valueCtrl: FormControl;
-
-  processing: boolean = false;
-
   constructor() {
-    
+    this.valueCtrl = new FormControl(Validators.required);
   }
 
   ngOnInit(): void {
-    this.valueCtrl = new FormControl(this.value, Validators.required);
-    if (this.state$) {
-      this.state$.subscribe(x => {
-        if (x.editMode !== undefined) {
-          this.editMode = x.editMode;
-        }
-        if (x.processing !== undefined) {
-          this.processing = x.processing;
-        }
-        if (x.error !== undefined) {
-          this.error = x.error;
-        }
-        if (x.value !== undefined) {
-          this.valueCtrl.setValue(x.value);
-        }
-      })
+    if (this.value !== undefined) {
+      this.valueCtrl.setValue(this.value);
     }
   }
 
@@ -104,8 +104,7 @@ export class EditableLabelComponent implements OnInit, EditableLabelInterface {
 
     this.editCompleted.emit(
       {
-        value: this.valueCtrl.value,
-        source: this
+        value: this.valueCtrl.value
       });
   }
 

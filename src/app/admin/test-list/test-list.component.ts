@@ -3,7 +3,7 @@ import { sections } from '../../core/example-data'
 import { TaskSectionInfo, TaskSectionViewModel } from '../../core/interfaces';
 import { TaskInfo } from '../../core/view-models';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
+import { EditableLabelState, EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
 //import { filter, flatMap } from 'rxjs/operators';
 
 @Component({
@@ -14,6 +14,9 @@ import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-l
 export class TestListComponent implements OnInit {
 
   constructor() { }
+
+  sectionNameState: EditableLabelState<string>;
+  taskNameState: EditableLabelState<string>;
 
   ngOnInit(): void {
 
@@ -27,14 +30,20 @@ export class TestListComponent implements OnInit {
 
   sectionsVm: TaskSectionViewModel[] = sections;
 
-  onTaskNameEditCompleted(event: EditCompletedEventArgs, taskInfo: TaskInfo) {
-      taskInfo.name = event.value;
-      event.source.editMode = false;
+  onSectionNameEditCompleted(event: EditCompletedEventArgs<string>, sectionInfo: TaskSectionInfo) {
+    sectionInfo.name = event.value;
+    sectionInfo.state = {
+      value: event.value,
+      editMode: false
+    }
   }
 
-  onSectionNameEditCompleted(event: EditCompletedEventArgs, sectionInfo: TaskSectionInfo) {
-      sectionInfo.name = event.value;
-      event.source.editMode = false;
+  onTaskNameEditCompleted(event: EditCompletedEventArgs<string>, taskInfo: TaskInfo) {
+    taskInfo.name = event.value;
+    taskInfo.state = {
+      value: event.value,
+      editMode: false
+    }
   }
 
   moveSection(event: CdkDragDrop<TaskSectionInfo[]>) {
@@ -44,17 +53,17 @@ export class TestListComponent implements OnInit {
   }
 
   moveTask(event: CdkDragDrop<TaskInfo[]>) {
-    
+
     if (event === undefined || event.item == undefined) {
       console.error("Unable to get dropping item data!");
       return;
     }
     const tasks = event.item.data as TaskInfo[];
-    if (tasks === undefined || tasks.length === 0){
+    if (tasks === undefined || tasks.length === 0) {
       console.error("Dropping item data is incorrect!");
       return;
     }
- 
+
     // const tasks = event.item.data.section.tasks;
     // if (tasks === undefined || tasks.length == 0){
     //   alert("Error! Section doesn't have tasks");

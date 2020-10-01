@@ -13,33 +13,36 @@ import { SkillsViewState } from '../skills-chips/skills-chips.component';
 })
 export class TaskSummaryComponent implements OnInit {
 
+  private _task: TaskInfo;
+
   @Input()
-  task: TaskInfo;
+  set task(value: TaskInfo){
+    this._task = value;
+    this.nameStateTracker = new BehaviorSubject<EditableLabelState<string>>({value: this._task.name});
+  }
 
-  allSkills$: Observable<SkillVm[]>;
+  get task(): TaskInfo{
+    return this._task;
+  }
 
-  skillsStateTracker: Subject<SkillsViewState> =
-    new Subject<SkillsViewState>();
+  skillsStateTracker: Subject<SkillsViewState> = new Subject<SkillsViewState>();
+  nameStateTracker: BehaviorSubject<EditableLabelState<string>>;
 
-  nameStateTracker: Subject<EditableLabelState> =
-    new Subject<EditableLabelState>();
-
-  constructor(private _taskService: TaskService) {
-    this.allSkills$ = _taskService.allSkills$;
+  constructor(public taskService: TaskService) {
   }
 
   ngOnInit(): void {
-
+    this.nameStateTracker.next({ value: this.task.name});
   }
 
-  onNameEditCompleted(event: EditCompletedEventArgs) {
+  onNameEditCompleted(event: EditCompletedEventArgs<string>) {
     this.nameStateTracker.next({ processing: true });
     const newName = event.value;
 
-    this._taskService.updateTaskName(this.task.id, newName).subscribe(
+    this.taskService.updateTaskName(this.task.id, newName).subscribe(
       () => {
         this.task.name = newName;
-        this.nameStateTracker.next({ processing: false, editMode: false, error: null });
+        this.nameStateTracker.next({ value:newName, processing: false, editMode: false, error: null });
       },
       (err) => {
         this.nameStateTracker.next({ processing: false, editMode: true, error: err.error });
@@ -51,7 +54,7 @@ export class TaskSummaryComponent implements OnInit {
     console.log(`onSkillsChange: ${JSON.stringify(skills)}`)
     this.skillsStateTracker.next({ processing: true })
 
-    this._taskService.updateSkills(this.task.id, skills).subscribe(
+    this.taskService.updateSkills(this.task.id, skills).subscribe(
 
       res => {
         console.log(`onSkillsChange: callback`)

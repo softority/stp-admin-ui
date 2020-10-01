@@ -3,9 +3,8 @@
     <div class="points-viewer">
         <mat-icon inline=true>equalizer</mat-icon>
         <stp-editable-label #pl (editCompleted)="onPointsEditCompleted($event)" 
-            [value]="taskInfo.points"
             [inputType]="'number'"
-            [state$]="pointsTracker.asObservable()">
+            [state]="pointsTracker | async">
         </stp-editable-label>
         <span [class.hidden]="pl.editMode">points</span>
     </div>
@@ -14,9 +13,8 @@
     <div class="points-viewer">
         <mat-icon inline=true>timer</mat-icon>
         <stp-editable-label #dl (editCompleted)="onDurationEditCompleted($event)"
-            [value]="taskInfo.duration"
             [inputType]="'number'"
-            [state$]="durationTracker.asObservable()">
+            [state]="durationTracker | async">
         </stp-editable-label>
         <span [class.hidden]="dl.editMode">minutes</span>
     </div>

@@ -1,4 +1,5 @@
 import { TreeNode } from 'src/app/shared/utils/common-utils';
+import { EditableLabelState } from '../shared/editable-label/editable-label.component';
 import { TaskViewModel } from './view-models';
 
 /** File node data with possible child nodes. */
@@ -28,5 +29,7 @@ export interface TaskSectionViewModel {
 export interface TaskSectionInfo {
   id: number;
   name: string;
+
+  state: EditableLabelState<string>;
 }
 

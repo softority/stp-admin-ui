@@ -10,7 +10,7 @@ TESTS:
         <stp-editable-label
             (editCompleted)="onSectionNameEditCompleted($event, data)"
             [placeholder]="'Type name here...'"
-            [value]="data.name">
+            [state]="data.state">
         </stp-editable-label>
     </div>
 
@@ -33,7 +33,7 @@ TESTS:
         <stp-editable-label
             (editCompleted)="onTaskNameEditCompleted($event, data)"
             [placeholder]="'Type name here...'"
-            [value]="data.name">
+            [state]="data.state">
         </stp-editable-label>
 
         <!-- <stp-task-name [taskInfo]="data"></stp-task-name> -->

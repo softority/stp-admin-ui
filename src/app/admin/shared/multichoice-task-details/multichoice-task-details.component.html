@@ -34,8 +34,7 @@
                 <mat-cell *matCellDef="let element">
                     <stp-editable-label 
                         [placeholder]="'Type answer here...'"
-                        [value]="element.text"                        
-                        [editMode]="(element.id === undefined)"
+                        [state]="element.state"                                                              
                         (editCompleted)="onEditCompleted($event, element)"
                         (editCanceled)="onEditCanceled(element)"
                         >
