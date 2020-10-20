@@ -1,21 +1,18 @@
 <h2 mat-dialog-title>{{title}}</h2>
 
-<mat-dialog-content >
+<mat-dialog-content>
     <form [formGroup]="form">
-    <mat-form-field>
-        <input matInput
-                placeholder={{placeholder}}
-                formControlName="name">
-    </mat-form-field>
-</form>
+        <mat-form-field>
+            <input matInput placeholder={{placeholder}} formControlName="name">
+        </mat-form-field>
+    </form>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button class="mat-button" [mat-dialog-close] = "undefined">
+    <button class="mat-button" [mat-dialog-close]="undefined">
         Cancel
     </button>
-    <button class="mat-button mat-primary" 
-            (click)="onOkClick()">
+    <button class="mat-button mat-primary" (click)="onOkClick()">
         Ok
     </button>
 </mat-dialog-actions>

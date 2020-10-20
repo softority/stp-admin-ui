@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-
 export interface NavCardItem{
   iconName: string;
   caption: string;
@@ -21,5 +20,4 @@ export class NavCardComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

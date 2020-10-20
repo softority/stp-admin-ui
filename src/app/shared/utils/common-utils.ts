@@ -2,11 +2,11 @@ export interface TreeNode {
     children?: TreeNode[];
 }
 
-function forEachNode(nodes: TreeNode[],parentNode: TreeNode, callback: (node: TreeNode) => any) {
+function forEachNode(nodes: TreeNode[], parentNode: TreeNode, callback: (node: TreeNode) => any) {
 
     if (parentNode !== undefined) {
         nodes = parentNode.children;
-    } 
+    }
 
     if (nodes != undefined) {
         for (const node of nodes) {

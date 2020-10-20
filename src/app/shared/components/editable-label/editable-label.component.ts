@@ -1,21 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, HostListener, HostBinding } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-
 
 export interface EditCompletedEventArgs<T extends string | number> {
   value: T;
-  //source: EditableLabelInterface;
-  //canceled: boolean;
-  //valueObject?: Object;
-  //handleValueCallback?: (ok: boolean) => void;
 }
-// export interface EditableLabelInterface {
-//   editMode: boolean;
-//   processing: boolean;
-//   error: string;
-//   value: string;
-// }
 
 export interface EditableLabelState<T extends string | number> {
   editMode?: boolean;
@@ -37,12 +25,6 @@ export class EditableLabelComponent implements OnInit {
   @Input()
   inputType: string = 'text';
 
-  @Output()
-  public editCompleted = new EventEmitter<EditCompletedEventArgs<string | number>>();
-
-  @Output()
-  public editCanceled = new EventEmitter();
-
   @Input()
   set state(value: EditableLabelState<string | number>){
     console.log(`EditableLabelComponent. set state: ${JSON.stringify(value)}`);
@@ -62,6 +44,12 @@ export class EditableLabelComponent implements OnInit {
       }
     }
   }
+
+  @Output()
+  public editCompleted = new EventEmitter<EditCompletedEventArgs<string | number>>();
+
+  @Output()
+  public editCanceled = new EventEmitter();
 
   value: string | number;
   editMode: boolean = false;

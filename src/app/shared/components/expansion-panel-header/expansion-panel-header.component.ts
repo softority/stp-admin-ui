@@ -7,20 +7,18 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 })
 export class ExpansionPanelHeaderComponent implements OnInit {
 
+  isContentHidden: boolean = true;
+
+  @Output()
+  public onToggle = new EventEmitter<boolean>();
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  isContentHidden: boolean = true;
-
   toggleState(event: MouseEvent){
     this.isContentHidden = !this.isContentHidden;
-
     this.onToggle.emit(this.isContentHidden);
   }
-
-  @Output()
-  public onToggle = new EventEmitter<boolean>();
-
 }

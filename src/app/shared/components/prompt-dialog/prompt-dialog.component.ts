@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-export class PromptDialogData{
+export class PromptDialogData {
   title?: string;
   placeholder?: string;
   name?: string;
@@ -22,15 +22,15 @@ export class PromptDialogComponent {
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<PromptDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: PromptDialogData) { 
+    @Inject(MAT_DIALOG_DATA) public data: PromptDialogData) {
 
-      this.title = data.title;
-      this.placeholder = data.placeholder;
+    this.title = data.title;
+    this.placeholder = data.placeholder;
 
-      this.form = fb.group({
-        name: [data.name, Validators.required]
-      });
-    }
+    this.form = fb.group({
+      name: [data.name, Validators.required]
+    });
+  }
 
   // onCancelClick(): void {
   //   this.dialogRef.close();
