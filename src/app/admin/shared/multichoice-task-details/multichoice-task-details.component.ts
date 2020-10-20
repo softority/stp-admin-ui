@@ -3,7 +3,7 @@ import { MultichoiceTaskData, Answer } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
 import { DataService } from 'src/app/core/services/data.service';
 import { allowedNodeEnvironmentFlags } from 'process';
-import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
+import { EditCompletedEventArgs } from 'src/app/shared/components/editable-label/editable-label.component';
 import { TaskService } from 'src/app/core/services/task.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 

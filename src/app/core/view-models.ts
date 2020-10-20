@@ -3,7 +3,7 @@ import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskD
 import { TaskSectionViewModel } from './interfaces';
 import { TreeItem } from '../shared/utils/arrayToTree';
 import { SkillDataService } from './services/data.service';
-import { EditableLabelState } from '../shared/editable-label/editable-label.component';
+import { EditableLabelState } from '../shared/components/editable-label/editable-label.component';
 import { Observable, Subject } from 'rxjs';
 
 export class TaskViewModel {

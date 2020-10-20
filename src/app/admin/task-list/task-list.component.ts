@@ -6,7 +6,7 @@ import { tasks } from '../../core/example-data'
 import { TaskInfo, TaskViewModel, MultichoiceTaskData, SkillStatus, SkillVm } from '../../core/view-models';
 import { DataService, TaskDataService } from 'src/app/core/services/data.service';
 import { tap, finalize, map, switchMap, catchError } from 'rxjs/operators';
-import { EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
+import { EditCompletedEventArgs } from 'src/app/shared/components/editable-label/editable-label.component';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { CreateTaskDialogComponent, CreateTaskDialogResult, CreateTaskDialogData } from '../create-task-dialog/create-task-dialog.component';

@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { TaskSummaryDto } from 'src/app/core/data-contract';
 import { TaskViewModel, TaskInfo, SkillVm } from 'src/app/core/view-models';
 import { TaskService } from 'src/app/core/services/task.service';
-import { EditCompletedEventArgs, EditableLabelState } from 'src/app/shared/editable-label/editable-label.component';
+import { EditCompletedEventArgs, EditableLabelState } from 'src/app/shared/components/editable-label/editable-label.component';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { SkillsViewState } from '../skills-chips/skills-chips.component';
 

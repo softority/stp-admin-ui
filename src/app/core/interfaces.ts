@@ -1,5 +1,5 @@
 import { TreeNode } from 'src/app/shared/utils/common-utils';
-import { EditableLabelState } from '../shared/editable-label/editable-label.component';
+import { EditableLabelState } from '../shared/components/editable-label/editable-label.component';
 import { TaskViewModel } from './view-models';
 
 /** File node data with possible child nodes. */

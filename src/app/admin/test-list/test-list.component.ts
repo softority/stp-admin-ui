@@ -3,7 +3,7 @@ import { sections } from '../../core/example-data'
 import { TaskSectionInfo, TaskSectionViewModel } from '../../core/interfaces';
 import { TaskInfo } from '../../core/view-models';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { EditableLabelState, EditCompletedEventArgs } from 'src/app/shared/editable-label/editable-label.component';
+import { EditableLabelState, EditCompletedEventArgs } from 'src/app/shared/components/editable-label/editable-label.component';
 //import { filter, flatMap } from 'rxjs/operators';
 
 @Component({

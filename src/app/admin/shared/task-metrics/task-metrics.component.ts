@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TaskInfo } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
-import { EditCompletedEventArgs, EditableLabelState } from 'src/app/shared/editable-label/editable-label.component';
+import { EditCompletedEventArgs, EditableLabelState } from 'src/app/shared/components/editable-label/editable-label.component';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { TaskService } from 'src/app/core/services/task.service';
 import { TaskComplexity } from 'src/app/core/data-contract';

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, TemplateRef, ViewChild, AfterViewInit, ContentChild, OnDestroy } from '@angular/core';
-import { ExpansionPanelTemplateData } from '../interfaces';
+import { ExpansionPanelTemplateData } from '../../interfaces';
 import { ExpansionPanelHeaderComponent } from '../expansion-panel-header/expansion-panel-header.component';
 
 @Component({
@@ -12,7 +12,6 @@ export class ExpansionPanelComponent implements OnInit, AfterViewInit, OnDestroy
   constructor() { }
 
   ngOnInit(): void {
-  
   }
   ngOnDestroy(): void {
     this.headerComponent.onToggle.unsubscribe();
