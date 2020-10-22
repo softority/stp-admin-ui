@@ -36,29 +36,8 @@
                         [placeholder]="'Type answer here...'"
                         [state]="element.state"                                                              
                         (editCompleted)="onEditCompleted($event, element)"
-                        (editCanceled)="onEditCanceled(element)"
-                        >
-
+                        (editCanceled)="onEditCanceled(element)">
                     </stp-editable-label>
-                    <!-- <div class="answer">
-                        <div class="answer-viewer" *ngIf="!isAnswerEditable(element)" (click)="onAnswerClick(element)">
-                            <span class="answer-text">{{element.text}}</span>
-                            <mat-icon class="edit-icon">edit</mat-icon>
-                        </div>
-                        <div class="answer-editor" *ngIf="isAnswerEditable(element)">
-                            <mat-form-field floatLabel="never" >
-                                <input #input matInput [value]="element.text"
-                                    [attr.disabled]="isAnswerPending(element)"
-                                    placeholder="Type answer here..."
-                                    (keydown.enter)="applyAnswerEdit($event, element, input)"
-                                    (keydown.escape)="cancelAnswerEdit($event, element, input)" autofocus />
-                            </mat-form-field>
-
-                            <mat-icon *ngIf="!isAnswerPending(element)" (click)="applyAnswerEdit($event, element, input)">done</mat-icon>
-                            <mat-icon *ngIf="!isAnswerPending(element)" (click)="cancelAnswerEdit($event, element, input)">clear</mat-icon>
-                            <mat-spinner *ngIf="isAnswerPending(element)" [diameter]="16"></mat-spinner>
-                        </div>
-                    </div> -->
                 </mat-cell>
             </ng-container>
 

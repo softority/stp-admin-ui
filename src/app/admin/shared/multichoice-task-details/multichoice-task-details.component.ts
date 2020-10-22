@@ -16,19 +16,17 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 })
 export class MultichoiceTaskDetailsComponent implements OnInit {
 
+  @Input()
+  data: MultichoiceTaskData;
+
   constructor(
-    //private _dataService: DataService
     private _taskService: TaskService
   ) { }
-
 
   ngOnInit(): void {
     this.answers = this.data.answers;
     this.questionCtrl = new FormControl(this.data.question, Validators.required);
   }
-
-  @Input()
-  data: MultichoiceTaskData;
 
   //#region QUESTION
 
@@ -54,20 +52,11 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
 
   // #region ANSWERS
 
-  private _pendingAnswer: Answer;
-
   displayedColumns: string[] = ['id', 'text', 'isCorrect', 'actions'];
   answers: Answer[];
   questionCtrl: FormControl;
 
-  // onAnswerClick(answer: Answer) {
-  //   this._editableAnswer = answer;
-  // }
-
-  // isAnswerEditable(answer: Answer): boolean {
-  //   const res = this._editableAnswer === answer;
-  //   return res;
-  // }
+  private _pendingAnswer: Answer;
 
   isAnswerPending(answer: Answer) {
     const res = this._pendingAnswer === answer;
@@ -87,8 +76,6 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     answer.state = {
       processing: true
     };
-    //event.source.processing = true;
-    //this._pendingAnswer.nameStateTracker.next({ processing: true });
 
     // if this is new, just added answer
     if (answer.id === undefined) {
@@ -108,11 +95,6 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
             error: null,
             value: res.name
           };
-          //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: false, error: null });
-          // event.source.processing = false;
-          // event.source.editMode = false;
-          // event.source.error = null;
-
           this._pendingAnswer = undefined;
         },
         (err) => {
@@ -123,12 +105,6 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
             error: null, 
             value: answer.name
           };
-
-          //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: true, error: err.error, value: answer.text });
-          // event.source.processing = false;
-          // event.source.editMode = true;
-          // event.source.error = err.error;
-          // event.source.value = answer.name;
         }
       );
     }
@@ -140,8 +116,6 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
         name: event.value
       }).subscribe(
         () => {
-          //answer.name = event.value;
-          //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: false, error: null });
           answer.state = {
             processing: false,
             editMode: false,
@@ -151,8 +125,6 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
           this._pendingAnswer = undefined;
         },
         (err) => {
-          //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: true, error: err.error, value: answer.text });
-
           answer.state = {
             processing: false,
             editMode: true,
@@ -175,10 +147,9 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
       editMode: true,
       value: ''
     };
-    // { text: '', isCorrect: false };
     this.addAnswerInternal(newAnswer);
-    //this._editableAnswer = newAnswer;
   }
+
   onCheckedChanged(event: MatCheckboxChange, answer: Answer) {
     const isCorrect = event.checked;
     if (answer.id === undefined) {
@@ -209,17 +180,14 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
       this.removeAnswerInternal(answer);
       return;
     }
-    //this._pendingAnswer.nameStateTracker.next({ processing: true });
     this._pendingAnswer = answer;
     this._taskService.deleteTaskAnswer(answer.id).subscribe(
       () => {
-        //this._pendingAnswer.nameStateTracker.next({ processing: false, editMode: false, error: null });
         this.removeAnswerInternal(answer);
         this._pendingAnswer = undefined;
       },
       (err) => {
         this._pendingAnswer = undefined;
-        //this._pendingAnswer.nameStateTracker.next({ processing: false, error: err.error });
       }
     );
   }

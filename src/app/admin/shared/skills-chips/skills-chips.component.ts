@@ -7,8 +7,6 @@ import { startWith, map, concatMap, switchMap, debounceTime, shareReplay, repeat
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SkillDataService } from 'src/app/core/services/data.service';
 import { SkillVm, SkillStatus, Answer } from 'src/app/core/view-models';
-import { state } from '@angular/animations';
-import { OnChanges } from '@angular/core';
 
 export interface SkillsViewState {
   editMode?: boolean;
@@ -35,21 +33,14 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     return this._skills;
   }
 
+  @Output()
+  skillsChange: EventEmitter<SkillVm[]> = new EventEmitter<SkillVm[]>();
+
   @Input()
   viewModeOff: boolean;
 
   @Input()
   allSkills$: Observable<SkillVm[]>;
-
-  // @Input()
-  // set allSkills(value: SkillVm[]){
-  //   console.log(`SET allSkills: ${JSON.stringify(value)}`);
-  //   this._allSkills = value;
-  // }
-  // get allSkills(): SkillVm[]{
-  //   return this._allSkills; 
-  // }
-  // private _allSkills: SkillVm[];
 
   @Input()
   set state(value: SkillsViewState) {
@@ -65,7 +56,10 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
+  @ViewChild('skillInput') skillInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
   get editMode() {
     return this._editMode;
   }
@@ -90,12 +84,6 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     return res;
   }
 
-  @Output()
-  skillsChange: EventEmitter<SkillVm[]> = new EventEmitter<SkillVm[]>();
-
-  @ViewChild('skillInput') skillInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
-
   filteredSkills$: Observable<SkillVm[]>;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   skillCtrl = new FormControl();
@@ -105,6 +93,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
   private _prevSkills: SkillVm[];
   private _editMode: boolean;
   private _subscription: Subscription = new Subscription();
+  private _filteredSkillsCache: SkillVm[] = [];
 
   constructor(private _dataService: SkillDataService) {
 
@@ -126,31 +115,12 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
         tap(x => this._filteredSkillsCache = x)
       );
   }
-  private _filteredSkillsCache: SkillVm[] = [];
 
-  // ngOnChanges(changes: SimpleChanges): void{
-  //   console.log(`ngOnChanges: ${JSON.stringify(changes)}`);
-  //   if (changes.allSkills){
-
-  //   }
-  // }
   ngOnInit(): void {
 
     if (this.viewModeOff) {
       this.editMode = true;
     }
-
-    // const skillsWithoutAdded = this.filterByExistingSkills(this.allSkills);
-
-    // const searchText$: Observable<string | null> =
-    //   merge(of(''), this.skillCtrl.valueChanges.pipe(debounceTime(300)));
-
-    //   this.filteredSkills$ = this._skillTracker.pipe(
-    //     startWith([]),
-    //     switchMap(() => searchText$),
-    //     map((searchText) => searchText ? this.filterBySearchText(skillsWithoutAdded, searchText) : skillsWithoutAdded),
-    //     tap(x => this._filteredSkillsCache = x)
-    // );    
   }
 
   // TODO: check all subscriptions on unsubscribing
@@ -158,12 +128,6 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     console.log('SkillsChipsComponent.OnDestroy')
     this._subscription.unsubscribe();
   }
-
-  // onBlur(event: Event) {
-  //   //event.stopPropagation();
-  //   console.log(`onblur -> emit: ${JSON.stringify(this.skills)}`);
-  //   this.apply();
-  // }
 
   undo(event: Event) {
     event.stopPropagation();
@@ -177,11 +141,13 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
 
     this.editMode = false;
   }
+
   onEnter(event: Event) {
     event.stopPropagation();
     console.log(`onEnter.`);
     this.apply();
   }
+
   apply() {
     console.log(`apply: ${JSON.stringify(this.skills)}`);
     console.log(`apply prevSkills: ${JSON.stringify(this._prevSkills)}`);
@@ -211,7 +177,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
         const lookupSkill = this._filteredSkillsCache.find(x => x.name.toLocaleLowerCase() === skillName.toLocaleLowerCase());
         if (lookupSkill) {
           this.addOrRestoreSkill(lookupSkill);
-          //this.skills.push(lookupSkill);
+          
           // Refresh autocomplete data.
           this._skillTracker.next();
         }
@@ -239,6 +205,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
         this.skills.splice(index, 1);
       }
     }
+
     // in case when we are about to remove existed skill
     else if (skill.status === SkillStatus.Unchanged) {
       skill.status = SkillStatus.Removed;

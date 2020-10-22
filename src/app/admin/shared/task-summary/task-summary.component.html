@@ -8,10 +8,9 @@
         [state]="nameStateTracker | async">
     </stp-editable-label>
 
-    <!-- <stp-task-name [taskInfo]="data"></stp-task-name> -->
     <stp-skills-chips [skills]="task.skills"
                       [allSkills$]="taskService.allSkills$" 
                       (skillsChange)="onSkillsChange($event)"
-                      [state]="skillsStateTracker | async" 
-                      ></stp-skills-chips>
+                      [state]="skillsStateTracker | async">
+    </stp-skills-chips>
 </div>

@@ -9,6 +9,9 @@ import { MultichoiceTaskData, TaskViewModel } from 'src/app/core/view-models';
 })
 export class ExpansionPanelSandboxComponent implements OnInit {
 
+  loading: boolean;
+  tasksVm: TaskViewModel[];
+
   constructor(private dataService: DataService) {
     this.loading = true
     dataService.getTasks().pipe(
@@ -24,8 +27,4 @@ export class ExpansionPanelSandboxComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  loading: boolean;
-  tasksVm: TaskViewModel[];
-
 }

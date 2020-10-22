@@ -13,20 +13,19 @@ import { SkillsViewState } from '../skills-chips/skills-chips.component';
 })
 export class TaskSummaryComponent implements OnInit {
 
-  private _task: TaskInfo;
-
   @Input()
   set task(value: TaskInfo){
     this._task = value;
     this.nameStateTracker = new BehaviorSubject<EditableLabelState<string>>({value: this._task.name});
   }
-
   get task(): TaskInfo{
     return this._task;
   }
 
   skillsStateTracker: Subject<SkillsViewState> = new Subject<SkillsViewState>();
   nameStateTracker: BehaviorSubject<EditableLabelState<string>>;
+
+  private _task: TaskInfo;
 
   constructor(public taskService: TaskService) {
   }

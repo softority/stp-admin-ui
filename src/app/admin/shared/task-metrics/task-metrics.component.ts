@@ -17,21 +17,19 @@ export class TaskMetricsComponent implements OnInit {
   pointsTracker: BehaviorSubject<EditableLabelState<number>>;
   durationTracker: BehaviorSubject<EditableLabelState<number>>;
 
-  private _taskInfo: TaskInfo;
-
-  @Input()
-  set taskInfo(value: TaskInfo){
-    this._taskInfo = value;
-    this.pointsTracker = new BehaviorSubject<EditableLabelState<number>>({value: this._taskInfo.points});
-    this.durationTracker = new BehaviorSubject<EditableLabelState<number>>({value: this._taskInfo.duration});
-  }
-
-  get taskInfo(): TaskInfo{
+  get taskInfo(): TaskInfo {
     return this._taskInfo;
   }
+  @Input()
+  set taskInfo(value: TaskInfo) {
+    this._taskInfo = value;
+    this.pointsTracker = new BehaviorSubject<EditableLabelState<number>>({ value: this._taskInfo.points });
+    this.durationTracker = new BehaviorSubject<EditableLabelState<number>>({ value: this._taskInfo.duration });
+  }
 
-  constructor(private _taskService: TaskService) { 
-    
+  private _taskInfo: TaskInfo;
+
+  constructor(private _taskService: TaskService) {
   }
 
   ngOnInit(): void {
@@ -52,7 +50,7 @@ export class TaskMetricsComponent implements OnInit {
       (err) => {
         this.pointsTracker.next({ processing: false, editMode: false, error: err.error });
       }
-    );    
+    );
   }
 
   onDurationEditCompleted(event: EditCompletedEventArgs<number>) {
@@ -66,7 +64,7 @@ export class TaskMetricsComponent implements OnInit {
       (err) => {
         this.durationTracker.next({ processing: false, editMode: false, error: err.error });
       }
-    );    
+    );
   }
 
   // #region complexity
@@ -74,19 +72,18 @@ export class TaskMetricsComponent implements OnInit {
   complexityEditMode: boolean;
   complexityCtrl: FormControl;
   complexityError: string;
-  //complexityValues: string[] = ['High', 'Medium', 'Low'];
-  
-  getComplexityName(value: number) {
-    return TaskComplexity[value];
-  }
+
   complexityValues: number[] = Object.keys(TaskComplexity)
     .filter(k => typeof TaskComplexity[k as any] === "string")
     .map(x => parseInt(x));
 
+  getComplexityName(value: number) {
+    return TaskComplexity[value];
+  }
 
   onComplexityChanged(event: Event) {
     //event.stopPropagation();
-    if (!this.complexityCtrl.valid){
+    if (!this.complexityCtrl.valid) {
       return;
     }
     const complexity = <TaskComplexity>this.complexityCtrl.value;
@@ -103,11 +100,6 @@ export class TaskMetricsComponent implements OnInit {
     this.taskInfo.complexity = this.complexityCtrl.value;
     this.complexityEditMode = false;
   }
-  // TODO: fix bug: "event.stopPropagation is not a function"
-  stopProp(event: Event) {
-    event.stopPropagation();
-  }
 
   // #endregion complexity
-
 }
