@@ -1,18 +1,11 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-
-import { tasks } from '../../core/example-data'
-import { TaskInfo, TaskViewModel, MultichoiceTaskData, SkillStatus, SkillVm } from '../../core/view-models';
-import { DataService, TaskDataService } from 'src/app/core/services/data.service';
-import { tap, finalize, map, switchMap, catchError } from 'rxjs/operators';
-import { EditCompletedEventArgs } from 'src/app/shared/components/editable-label/editable-label.component';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { TaskViewModel } from '../../core/view-models';
+import { ActivatedRoute } from '@angular/router';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { CreateTaskDialogComponent, CreateTaskDialogResult, CreateTaskDialogData } from '../create-task-dialog/create-task-dialog.component';
-import { TaskDto, TaskComplexity, TaskType, SkillStateDto, SkillState } from 'src/app/core/data-contract';
-import { error } from '@angular/compiler/src/util';
-import { throwError, Observable, Subscription } from 'rxjs';
+import { TaskComplexity, TaskType } from 'src/app/core/data-contract';
+import { Observable, Subscription } from 'rxjs';
 import { TaskService } from 'src/app/core/services/task.service';
 
 @Component({
@@ -44,7 +37,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
   }
 
   ngOnDestroy(): void {
@@ -98,10 +90,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
       this.taskService.updateTaskPosition(taskId, newPosition)
         .subscribe(() => console.log('subscription: updateTaskPosition'))
     );
-
-    // let tmp = this.tasksVm[event.previousIndex];
-    // this.tasksVm[event.previousIndex] = this.tasksVm[event.currentIndex];
-    // this.tasksVm[event.currentIndex] = tmp;
   }
 
   private loadData(categoryId: number) {

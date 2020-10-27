@@ -1,0 +1,14 @@
+//https://localhost:5001/api/Task/GetTasksByCategory/1
+
+POST https://localhost:5001/api/Task/CreateTask HTTP/1.1
+content-type: application/json
+
+{
+    "name": "TAAAASSSKKK!!!!!!", 
+    "complexity": 1, 
+    "durationMinutes": 2, 
+    "points": 10, 
+    "taskCategoryId": 1,
+     "type": 14,
+     "skills": []
+}

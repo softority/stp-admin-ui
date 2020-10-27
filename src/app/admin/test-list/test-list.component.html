@@ -45,36 +45,3 @@ TESTS:
         <stp-multichoice-task-details [data]="data"></stp-multichoice-task-details>
     </div>
 </ng-template>
-
-
-<!-- <ng-template #taskHeader let-data="header">
-    <div class="task-header-container">
-        <div>
-            <mat-chip class="task-type">{{data.type}}</mat-chip>
-            <div class="task-kpi">
-                <div class="points">
-                    <mat-icon inline=true>equalizer</mat-icon> <span>{{data.points}} points</span>
-                </div>
-                <div class="time">
-                    <mat-icon inline=true>timer</mat-icon><span>{{data.duration}} minutes</span>
-                </div>
-                <div class="complexity">
-                    <mat-chip>{{data.complexity}}</mat-chip>
-                </div>
-            </div>
-        </div>
-        <div class="task-name">{{data.name}}</div>
-        <div class="task-skills">
-            <mat-chip-list *ngFor="let skill of data.skills">
-                <mat-chip>{{skill}}</mat-chip>
-            </mat-chip-list>
-
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #taskContent let-data="content">
-    <div class="task-content-container">
-        {{data}}
-    </div>
-</ng-template> -->

@@ -20,6 +20,21 @@ import { FlatTreeNode, FileNode } from '../../core/interfaces';
 })
 export class TestsTreeComponent {
 
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+
+  /** The TreeControl controls the expand/collapse state of tree nodes.  */
+  treeControl: FlatTreeControl<FlatTreeNode>;
+
+  /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
+  treeFlattener: MatTreeFlattener<FileNode, FlatTreeNode>;
+
+  /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
+  dataSource: MatTreeFlatDataSource<FileNode, FlatTreeNode>;
+
+  contextMenuPosition = { x: '0px', y: '0px' };
+
+  private _selectedNode: FlatTreeNode;
+
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -35,19 +50,6 @@ export class TestsTreeComponent {
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
     this.dataSource.data = files;
   }
-
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-
-  /** The TreeControl controls the expand/collapse state of tree nodes.  */
-  treeControl: FlatTreeControl<FlatTreeNode>;
-
-  /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
-  treeFlattener: MatTreeFlattener<FileNode, FlatTreeNode>;
-
-  /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-  dataSource: MatTreeFlatDataSource<FileNode, FlatTreeNode>;
-
-  private _selectedNode: FlatTreeNode;
 
   /** Transform the data to something the tree can read. */
   transformer(node: FileNode, level: number) {
@@ -92,8 +94,6 @@ export class TestsTreeComponent {
       this._router.navigate([node.id], { relativeTo: this._route });
     }
   }
-
-  contextMenuPosition = { x: '0px', y: '0px' };
 
   onNodeRightClick(event: MouseEvent, node: FlatTreeNode) {
     event.preventDefault();
@@ -152,7 +152,7 @@ export class TestsTreeComponent {
       }
     }
   }
-  
+
   private openConfirmationDialog(data: ConfirmationDialogData): Observable<boolean> {
     const config = new MatDialogConfig();
 
@@ -164,6 +164,7 @@ export class TestsTreeComponent {
 
     return dialogRef.afterClosed()
   }
+
   private openPromptDialog(data: PromptDialogData): Observable<string> {
 
     const config = new MatDialogConfig();

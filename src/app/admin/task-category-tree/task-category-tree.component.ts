@@ -24,6 +24,22 @@ import { TaskCategoryVm } from 'src/app/core/view-models';
 })
 export class TaskCategoryTreeComponent {
 
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+
+  /** The TreeControl controls the expand/collapse state of tree nodes.  */
+  treeControl: FlatTreeControl<FlatTreeNode>;
+
+  /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
+  treeFlattener: MatTreeFlattener<TreeItem, FlatTreeNode>;
+
+  /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
+  dataSource: MatTreeFlatDataSource<TreeItem, FlatTreeNode>;
+  
+  loading: boolean;
+  contextMenuPosition = { x: '0px', y: '0px' };
+
+  private _selectedNode: FlatTreeNode;
+
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -40,10 +56,7 @@ export class TaskCategoryTreeComponent {
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
     this.loadData();
-
   }
-
-  loading: boolean;
 
   private loadData() {
     this.loading = true;
@@ -54,19 +67,6 @@ export class TaskCategoryTreeComponent {
         this.dataSource.data = tree;
       });
   }
-
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-
-  /** The TreeControl controls the expand/collapse state of tree nodes.  */
-  treeControl: FlatTreeControl<FlatTreeNode>;
-
-  /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
-  treeFlattener: MatTreeFlattener<TreeItem, FlatTreeNode>;
-
-  /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-  dataSource: MatTreeFlatDataSource<TreeItem, FlatTreeNode>;
-
-  private _selectedNode: FlatTreeNode;
 
   /** Transform the data to something the tree can read. */
   transformer(node: TreeItem, level: number) {
@@ -114,12 +114,9 @@ export class TaskCategoryTreeComponent {
   onNodeClick(node: FlatTreeNode) {
     if (node.id !== undefined) {
       this._selectedNode = node;
-
       this._router.navigate([node.id], { relativeTo: this._route });
     }
   }
-
-  contextMenuPosition = { x: '0px', y: '0px' };
 
   onNodeRightClick(event: MouseEvent, node: FlatTreeNode) {
     event.preventDefault();
@@ -137,7 +134,6 @@ export class TaskCategoryTreeComponent {
   }
 
   onTreeRightClick(event: MouseEvent) {
-
     event.preventDefault();
 
     if (this.trigger.menuOpen) {
@@ -182,6 +178,7 @@ export class TaskCategoryTreeComponent {
 
     return dialogRef.afterClosed()
   }
+
   private openPromptDialog(data: PromptDialogData): Observable<string> {
 
     const config = new MatDialogConfig();
@@ -263,6 +260,7 @@ export class TaskCategoryTreeComponent {
         }
       });
   }
+
   private deleteCategory(node: FlatTreeNode) {
     this.openConfirmationDialog(
       {

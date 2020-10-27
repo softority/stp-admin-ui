@@ -4,7 +4,6 @@ import { TaskSectionInfo, TaskSectionViewModel } from '../../core/interfaces';
 import { TaskInfo } from '../../core/view-models';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { EditableLabelState, EditCompletedEventArgs } from 'src/app/shared/components/editable-label/editable-label.component';
-//import { filter, flatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'stp-test-list',
@@ -13,13 +12,13 @@ import { EditableLabelState, EditCompletedEventArgs } from 'src/app/shared/compo
 })
 export class TestListComponent implements OnInit {
 
-  constructor() { }
-
   sectionNameState: EditableLabelState<string>;
   taskNameState: EditableLabelState<string>;
+  sectionsVm: TaskSectionViewModel[] = sections;
+
+  constructor() { }
 
   ngOnInit(): void {
-
     // fill sectionId field
     for (let sec of this.sectionsVm) {
       for (let t of sec.tasks) {
@@ -27,8 +26,6 @@ export class TestListComponent implements OnInit {
       }
     }
   }
-
-  sectionsVm: TaskSectionViewModel[] = sections;
 
   onSectionNameEditCompleted(event: EditCompletedEventArgs<string>, sectionInfo: TaskSectionInfo) {
     sectionInfo.name = event.value;
