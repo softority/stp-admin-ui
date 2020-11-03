@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { MultichoiceTaskData, Answer } from '../../../core/view-models';
+import { MultichoiceTaskInfoVm, MultichoiceTaskAnswerVm } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
-import { DataService } from 'src/app/core/services/data.service';
-import { allowedNodeEnvironmentFlags } from 'process';
 import { EditCompletedEventArgs } from 'src/app/shared/components/editable-label/editable-label.component';
 import { TaskService } from 'src/app/core/services/task.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -17,7 +15,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 export class MultichoiceTaskDetailsComponent implements OnInit {
 
   @Input()
-  data: MultichoiceTaskData;
+  data: MultichoiceTaskInfoVm;
 
   constructor(
     private _taskService: TaskService
@@ -53,24 +51,24 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
   // #region ANSWERS
 
   displayedColumns: string[] = ['id', 'text', 'isCorrect', 'actions'];
-  answers: Answer[];
+  answers: MultichoiceTaskAnswerVm[];
   questionCtrl: FormControl;
 
-  private _pendingAnswer: Answer;
+  private _pendingAnswer: MultichoiceTaskAnswerVm;
 
-  isAnswerPending(answer: Answer) {
+  isAnswerPending(answer: MultichoiceTaskAnswerVm) {
     const res = this._pendingAnswer === answer;
     return res;
   }
 
-  onEditCanceled(answer: Answer) {
+  onEditCanceled(answer: MultichoiceTaskAnswerVm) {
     if (answer.id === undefined) {
       // remove answer which about to add
       this.removeAnswerInternal(answer);
     }
   }
 
-  onEditCompleted(event: EditCompletedEventArgs<string>, answer: Answer) {
+  onEditCompleted(event: EditCompletedEventArgs<string>, answer: MultichoiceTaskAnswerVm) {
 
     this._pendingAnswer = answer;
     answer.state = {
@@ -142,7 +140,7 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
       alert('You need to finish adding previous answer!');
       return;
     }
-    const newAnswer = new Answer();
+    const newAnswer = new MultichoiceTaskAnswerVm();
     newAnswer.state = {
       editMode: true,
       value: ''
@@ -150,7 +148,7 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     this.addAnswerInternal(newAnswer);
   }
 
-  onCheckedChanged(event: MatCheckboxChange, answer: Answer) {
+  onCheckedChanged(event: MatCheckboxChange, answer: MultichoiceTaskAnswerVm) {
     const isCorrect = event.checked;
     if (answer.id === undefined) {
       answer.isCorrect = isCorrect;
@@ -174,7 +172,7 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     }
   }
 
-  deleteAnswer(answer: Answer) {
+  deleteAnswer(answer: MultichoiceTaskAnswerVm) {
     if (!answer.id) {
       // if this is just added answer that hasn't been created on the server
       this.removeAnswerInternal(answer);
@@ -192,13 +190,13 @@ export class MultichoiceTaskDetailsComponent implements OnInit {
     );
   }
 
-  private addAnswerInternal(newAnswer: Answer) {
+  private addAnswerInternal(newAnswer: MultichoiceTaskAnswerVm) {
     let answersCopy = this.answers.slice();
     answersCopy.push(newAnswer);
     this.answers = answersCopy;
   }
 
-  private removeAnswerInternal(answer: Answer) {
+  private removeAnswerInternal(answer: MultichoiceTaskAnswerVm) {
     let answersCopy = this.answers.slice();
     let ind = answersCopy.indexOf(answer);
     answersCopy.splice(ind, 1);

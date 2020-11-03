@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { TaskViewModel } from '../../core/view-models';
+import { TaskVm } from '../../core/view-models';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { CreateTaskDialogComponent, CreateTaskDialogResult, CreateTaskDialogData } from '../create-task-dialog/create-task-dialog.component';
@@ -16,7 +16,7 @@ import { TaskService } from 'src/app/core/services/task.service';
 export class TaskListComponent implements OnInit, OnDestroy {
 
   loading: boolean;
-  tasksVm$: Observable<TaskViewModel[]>;
+  tasksVm$: Observable<TaskVm[]>;
 
   private _categoryId: number;
   private _subscription = new Subscription();
@@ -70,7 +70,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
     })
   }
   
-  moveTask(event: CdkDragDrop<TaskViewModel[]>) {
+  moveTask(event: CdkDragDrop<TaskVm[]>) {
     console.log('moveTask:');
     console.log(event);
 
@@ -78,7 +78,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
       console.error("Unable to get dropping item data!");
       return;
     }
-    const tasks = event.item.data as TaskViewModel[] ;
+    const tasks = event.item.data as TaskVm[] ;
     if (tasks === undefined || tasks.length === 0) {
       console.error("Dropping item data is incorrect!");
       return;

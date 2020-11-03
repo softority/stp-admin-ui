@@ -15,7 +15,6 @@ import { MultichoiceTaskDetailsComponent } from './shared/multichoice-task-detai
 import { SkillsChipsComponent } from './shared/skills-chips/skills-chips.component';
 import { TaskNameComponent } from './shared/task-name/task-name.component';
 import { TaskMetricsComponent } from './shared/task-metrics/task-metrics.component';
-import { ExpansionPanelSandboxComponent } from './expansion-panel-sandbox/expansion-panel-sandbox.component';
 import { CreateTaskDialogComponent } from './create-task-dialog/create-task-dialog.component';
 import { TaskSummaryComponent } from './shared/task-summary/task-summary.component';
 
@@ -34,7 +33,6 @@ import { TaskSummaryComponent } from './shared/task-summary/task-summary.compone
     SkillsChipsComponent,
     TaskNameComponent,
     TaskMetricsComponent,
-    ExpansionPanelSandboxComponent,
     CreateTaskDialogComponent,
     TaskSummaryComponent],
   imports: [

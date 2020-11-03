@@ -1,33 +1,24 @@
 import { Injectable } from '@angular/core';
 import { TaskDataService, SkillDataService, MultichoiceTaskAnswerDataService } from './data.service';
-import { TaskViewModel, TaskInfo, SkillVm, SkillStatus, Answer } from '../view-models';
+import { TaskVm, TaskSummaryVm, SkillVm, SkillStatus, MultichoiceTaskAnswerVm } from '../view-models';
 import { Observable, throwError, BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
 import { switchMap, catchError, flatMap, map, share, publishLast, refCount, tap, switchMapTo, publish, startWith, mergeMap, shareReplay } from 'rxjs/operators';
-import { CreateTaskCommand, SkillStateDto, TaskComplexity, AddTaskAnswerCommand, MultichoiceTaskAnswerDto } from '../data-contract';
-import { ActivatedRoute } from '@angular/router';
+import { SkillStateDto, TaskComplexity, AddTaskAnswerCommand, MultichoiceTaskAnswerDto } from '../data-contract';
 import { CreateTaskDialogResult } from 'src/app/admin/create-task-dialog/create-task-dialog.component';
-import { TaskListComponent } from 'src/app/admin/task-list/task-list.component';
 
 // Manages the tasks
-// Load the tasks by category, applies the filter 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
 
-  // private _tasks: BehaviorSubject<TaskViewModel[]> = new BehaviorSubject([]);
-  // public readonly tasks$: Observable<TaskViewModel[]> = this._tasks.asObservable();
-
   filterText$: Observable<string> = new Observable(null);
   allSkills$: Observable<SkillVm[]>;
 
   private _categoryId: number;
-  private _categoryTracker = new Subject();
-
-  private _tasksTracker: Subject<TaskViewModel[]> = new Subject();
-  private _tasks$: Observable<TaskViewModel[]>;
-  private _tasksStore: { items: TaskViewModel[] } = { items: [] };
-
+  private _tasksTracker: Subject<TaskVm[]> = new Subject();
+  private _tasks$: Observable<TaskVm[]>;
+  private _tasksStore: { items: TaskVm[] } = { items: [] };
   private _skillsTracker = new Subject();
 
   constructor(
@@ -65,34 +56,15 @@ export class TaskService {
     //this._skillsTracker.next();
   }
 
-  getTasks(categoryId: number): Observable<TaskViewModel[]> {
+  getTasks(categoryId: number): Observable<TaskVm[]> {
     this._categoryId = categoryId;
     const res$ = this.load();
     return res$;
   }
 
-  private load() {
-    if (this._categoryId === undefined) {
-      throw new Error('Service is not initialized! categoryId is undefined');
-    }
-    this._taskDataService.getTasksByCategory(this._categoryId).pipe(      
-      map(x => x.sort((a, b)=> a.taskSummary.position - b.taskSummary.position)),
-      map(((x) => x.map((y => new TaskViewModel(y)))))
-      //map(x => x.sort(y => y.header.position))
-
-    ).subscribe(
-      res => {
-        this._tasksStore.items = res;
-        this._tasksTracker.next(Object.assign({}, this._tasksStore).items);
-      },
-      err => { alert(err.error); return throwError(err); }
-    );
-    return this._tasks$;
-  }
-
-  addTaskAnswer(cmd: AddTaskAnswerCommand): Observable<Answer> {
+  addTaskAnswer(cmd: AddTaskAnswerCommand): Observable<MultichoiceTaskAnswerVm> {
     const res$ = this._mcAnswersDataService.addTaskAnswer(cmd).pipe(
-      map(x => Answer.fromDto(x)),
+      map(x => MultichoiceTaskAnswerVm.fromDto(x)),
     );
     return res$;
   }
@@ -117,6 +89,7 @@ export class TaskService {
     );
     return res$;
   }
+  
   updateSkills(taskId: number, skills: SkillVm[]): Observable<SkillVm[]> {
     const dto: SkillStateDto[] = this.getSkillStates(skills);
     if (dto.length === 0) {
@@ -130,14 +103,7 @@ export class TaskService {
     return res$;
   }
 
-  private refreshAllSkillsIfNeeded(skills: SkillVm[]) {
-    if (skills.find(x => x.status === SkillStatus.New)) {
-      console.log(`refreshAllSkillsIfNeeded. _skillsTracker.next()`)
-      // refresh allSkills local catalog 
-      this._skillsTracker.next()
-    }
-  }
-  createTask(data: CreateTaskDialogResult): Observable<TaskViewModel> {
+  createTask(data: CreateTaskDialogResult): Observable<TaskVm> {
 
     // const res$ = this.taskDataService.createTask(cmd).pipe(map(x => new TaskViewModel(x)))
     //   .subscribe(x => {
@@ -158,7 +124,7 @@ export class TaskService {
 
     //this._tasksTracker.next(Object.assign({}, this._tasksStore).items);
     const res$ = this._taskDataService.createTask(cmd).pipe(
-      map(x => new TaskViewModel(x)),
+      map(x => new TaskVm(x)),
       tap(x => this._tasksStore.items.push(x)),
       tap(() => this._tasksTracker.next(Object.assign({}, this._tasksStore).items)),
       tap(() => this.refreshAllSkillsIfNeeded(data.skills)),
@@ -198,7 +164,7 @@ export class TaskService {
     return res$;
   }
 
-  updateTaskPosition(taskId: number, newPosition: number): Observable<TaskViewModel[]> {
+  updateTaskPosition(taskId: number, newPosition: number): Observable<TaskVm[]> {
     const res$ = this._taskDataService.updateTaskPosition(taskId, newPosition)
       .pipe(
         switchMap(() => this.load()),
@@ -207,12 +173,40 @@ export class TaskService {
     return res$;
   }
 
+  private load() {
+    if (this._categoryId === undefined) {
+      throw new Error('Service is not initialized! categoryId is undefined');
+    }
+    this._taskDataService.getTasksByCategory(this._categoryId).pipe(      
+      map(x => x.sort((a, b)=> a.taskSummary.position - b.taskSummary.position)),
+      map(((x) => x.map((y => new TaskVm(y)))))
+      //map(x => x.sort(y => y.header.position))
+    )
+    // <??> необходимо ли отписываться в этом случае. и вообще в singleton сервисах?
+    .subscribe(
+      res => {
+        this._tasksStore.items = res;
+        this._tasksTracker.next(Object.assign({}, this._tasksStore).items);
+      },
+      err => { alert(err.error); return throwError(err); }
+    );
+    return this._tasks$;
+  }
 
-  private filterTasks(tasks: TaskViewModel[], filterText: string): TaskViewModel[] {
+  private refreshAllSkillsIfNeeded(skills: SkillVm[]) {
+    if (skills.find(x => x.status === SkillStatus.New)) {
+      console.log(`refreshAllSkillsIfNeeded. _skillsTracker.next()`)
+      // refresh allSkills local catalog 
+      this._skillsTracker.next()
+    }
+  }
+
+  private filterTasks(tasks: TaskVm[], filterText: string): TaskVm[] {
     filterText = filterText.toLowerCase();
     const res = tasks.filter(x => x.header.name.toLowerCase().indexOf(filterText) === 0);
     return res;
   }
+
   private getAllSkills(): Observable<SkillVm[]> {
     // TODO: logic of forcing reload
     // TODO: <??> shareReplay is not working as expected!
@@ -222,6 +216,7 @@ export class TaskService {
     );
     return res$;
   }
+
   private getSkillStates(skills: SkillVm[]): SkillStateDto[] {
     const res: SkillStateDto[] = [];
     for (let s of skills.filter(x => x.status !== SkillStatus.Unchanged)) {

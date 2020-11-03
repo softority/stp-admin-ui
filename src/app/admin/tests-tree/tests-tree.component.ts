@@ -186,6 +186,7 @@ export class TestsTreeComponent {
         title: 'Add new category',
         placeholder: 'Category name'
       })
+      // <??> необходимо ли отписываться в случае с диалогами
       .subscribe(res => {
         if (name === undefined) {
           return;

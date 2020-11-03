@@ -1,6 +1,6 @@
 import { TreeNode } from 'src/app/shared/utils/common-utils';
 import { EditableLabelState } from '../shared/components/editable-label/editable-label.component';
-import { TaskViewModel } from './view-models';
+import { TaskVm } from './view-models';
 
 /** File node data with possible child nodes. */
 export interface FileNode extends TreeNode {
@@ -21,15 +21,15 @@ export interface FlatTreeNode {
   level: number;
   expandable: boolean;
 }
+
 export interface TaskSectionViewModel {
   header: TaskSectionInfo;
-  tasks: TaskViewModel[];
+  tasks: TaskVm[];
 }
 
 export interface TaskSectionInfo {
   id: number;
   name: string;
-
   state: EditableLabelState<string>;
 }
 

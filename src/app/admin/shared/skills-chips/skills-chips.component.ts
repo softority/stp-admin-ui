@@ -6,7 +6,7 @@ import { Observable, Subject, BehaviorSubject, combineLatest, merge, of, Subscri
 import { startWith, map, concatMap, switchMap, debounceTime, shareReplay, repeat, tap } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SkillDataService } from 'src/app/core/services/data.service';
-import { SkillVm, SkillStatus, Answer } from 'src/app/core/view-models';
+import { SkillVm, SkillStatus, MultichoiceTaskAnswerVm } from 'src/app/core/view-models';
 
 export interface SkillsViewState {
   editMode?: boolean;
@@ -109,6 +109,9 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     const searchText$: Observable<string | null> =
       merge(of(''), this.skillCtrl.valueChanges.pipe(debounceTime(300)));
 
+    // <??> filteredSkills используются с async pipe
+    // необходимо ли при этом вручную отписываться для вложенных Observables:
+    // allSkills$, searchText$.
     this.filteredSkills$ = combineLatest([skillsWithoutAdded$, searchText$])
       .pipe(
         map(([allSkills, searchText]) => searchText ? this.filterBySearchText(allSkills, searchText) : allSkills),
@@ -158,7 +161,7 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     }
   }
 
-  add(/*skills: string[],*/ event: MatChipInputEvent): void {
+  add(event: MatChipInputEvent): void {
 
     const input = event.input;
     const value = event.value;
@@ -241,7 +244,6 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
     }
     console.log(`addOrRestoreSkill: ${JSON.stringify(skill)}`);
   }
-
 
   private filterBySearchText(allSkills: SkillVm[], value: string): SkillVm[] {
     if (!allSkills) {

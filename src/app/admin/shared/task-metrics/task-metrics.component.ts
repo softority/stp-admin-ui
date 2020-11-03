@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TaskInfo } from '../../../core/view-models';
+import { TaskSummaryVm } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
 import { EditCompletedEventArgs, EditableLabelState } from 'src/app/shared/components/editable-label/editable-label.component';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -17,17 +17,17 @@ export class TaskMetricsComponent implements OnInit {
   pointsTracker: BehaviorSubject<EditableLabelState<number>>;
   durationTracker: BehaviorSubject<EditableLabelState<number>>;
 
-  get taskInfo(): TaskInfo {
+  get taskInfo(): TaskSummaryVm {
     return this._taskInfo;
   }
   @Input()
-  set taskInfo(value: TaskInfo) {
+  set taskInfo(value: TaskSummaryVm) {
     this._taskInfo = value;
     this.pointsTracker = new BehaviorSubject<EditableLabelState<number>>({ value: this._taskInfo.points });
     this.durationTracker = new BehaviorSubject<EditableLabelState<number>>({ value: this._taskInfo.duration });
   }
 
-  private _taskInfo: TaskInfo;
+  private _taskInfo: TaskSummaryVm;
 
   constructor(private _taskService: TaskService) {
   }

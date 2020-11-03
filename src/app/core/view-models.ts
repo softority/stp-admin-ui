@@ -1,52 +1,28 @@
 
 import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskDto, TaskType, TaskComplexity, SkillDto, SkillStateDto, SkillState } from './data-contract';
-import { TaskSectionViewModel } from './interfaces';
+import { TaskSectionViewModel as TaskSectionVm } from './interfaces';
 import { TreeItem } from '../shared/utils/arrayToTree';
-import { SkillDataService } from './services/data.service';
 import { EditableLabelState } from '../shared/components/editable-label/editable-label.component';
-import { Observable, Subject } from 'rxjs';
 
-export class TaskViewModel {
+export class TaskVm {
+
+    section?: TaskSectionVm;
+    header: TaskSummaryVm;
+    content: MultichoiceTaskInfoVm | string;
 
     constructor(data: TaskDto) {
-        this.header = new TaskInfo(data.taskSummary);
-
+        this.header = TaskSummaryVm.fromDto(data.taskSummary);
 
         if (data.taskSummary.type === TaskType.Multichoice) {
-            this.content = MultichoiceTaskData.fromDto(data.multichoiceTaskInfo);
+            this.content = MultichoiceTaskInfoVm.fromDto(data.multichoiceTaskInfo);
             this.content.taskId = this.header.id;
         }
-        // TOOD:
+        // TODO:
         // else if (data.taskSummary.type === TaskType.Coding)
-    }
-
-    section?: TaskSectionViewModel;
-    header: TaskInfo;
-    content: MultichoiceTaskData | string;
+    }    
 }
 
-export class TaskInfo {
-
-    // TODO: create static factory method instead
-    constructor(data: TaskSummaryDto) {
-        this.id = data.id;
-        this.name = data.name;
-        this.type = TaskType[data.type];
-        //this.skills = data.skills;
-        this.points = data.points;
-        this.duration = data.durationMinutes;
-        this.complexity = data.complexity;
-        this.position = data.position;
-
-        for (let s of data.skills) {
-            this.skills.push(SkillVm.fromDto(s))
-        }
-
-        this.state = {
-            editMode: data.id ? true : false,
-            value: data.name
-        };
-    }
+export class TaskSummaryVm {
 
     id: number;
     name: string;
@@ -56,22 +32,42 @@ export class TaskInfo {
     duration: number;
     complexity: TaskComplexity;
     position?: number;
-
     state: EditableLabelState<string>;
+
+    static fromDto(data: TaskSummaryDto) {
+
+        const res = new TaskSummaryVm();
+
+        res.id = data.id;
+        res.name = data.name;
+        res.type = TaskType[data.type];
+        res.points = data.points;
+        res.duration = data.durationMinutes;
+        res.complexity = data.complexity;
+        res.position = data.position;
+
+        for (let s of data.skills) {
+            res.skills.push(SkillVm.fromDto(s))
+        }
+
+        res.state = {
+            editMode: data.id ? true : false,
+            value: data.name
+        };
+
+        return res;
+    }
+
+    private constructor() {
+    }
 }
 
-
-// export interface  StatefulAnswer{
-//     answer: Answer;
-//     nameStateTracker: Subject<EditableLabelState>;
-// }
-export class Answer {
+export class MultichoiceTaskAnswerVm {
     constructor() {
-       //this.nameStateTracker = new Subject<EditableLabelState>();
-       
     }
-    static fromDto(data: MultichoiceTaskAnswerDto): Answer {
-        let res = new Answer();
+
+    static fromDto(data: MultichoiceTaskAnswerDto): MultichoiceTaskAnswerVm {
+        const res = new MultichoiceTaskAnswerVm();
         res.name = data.name;
         res.isCorrect = data.isCorrect;
         res.id = data.id;
@@ -81,27 +77,24 @@ export class Answer {
         };
         return res;
     }
+
     id?: number;
     name: string;
     isCorrect: boolean;
-
     state: EditableLabelState<string>;
-    // nameStateTracker: Subject<EditableLabelState>;
 }
 
-
-export class MultichoiceTaskData {
-
-    static fromDto(data: MultichoiceTaskInfoDto): MultichoiceTaskData {
-        let res = new MultichoiceTaskData();
-        res.question = data.question;
-        res.answers = data.answers.map(x => Answer.fromDto(x));
-        return res;
-    }
-
+export class MultichoiceTaskInfoVm {
     taskId?: number;
     question: string;
-    answers: Answer[];
+    answers: MultichoiceTaskAnswerVm[];
+
+    static fromDto(data: MultichoiceTaskInfoDto): MultichoiceTaskInfoVm {
+        let res = new MultichoiceTaskInfoVm();
+        res.question = data.question;
+        res.answers = data.answers.map(x => MultichoiceTaskAnswerVm.fromDto(x));
+        return res;
+    }
 }
 
 export class TaskCategoryVm implements TreeItem {
@@ -119,8 +112,9 @@ export enum SkillStatus {
 }
 
 export class SkillVm {
-    private constructor() {
-    }
+    id?: number;
+    name: string;
+    status: SkillStatus
 
     static fromDto(skill: SkillDto, state?: SkillStatus): SkillVm {
         const res = new SkillVm();
@@ -136,11 +130,6 @@ export class SkillVm {
         res.status = state;
         return res;
     }
-
-    id?: number;
-    name: string;
-    status: SkillStatus
-
 
     static getSkillState(skill: SkillVm): SkillStateDto {
 
@@ -168,6 +157,9 @@ export class SkillVm {
                 break;
         }
         return res;
+    }
+
+    private constructor() {
     }
 }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { sections } from '../../core/example-data'
 import { TaskSectionInfo, TaskSectionViewModel } from '../../core/interfaces';
-import { TaskInfo } from '../../core/view-models';
+import { TaskSummaryVm } from '../../core/view-models';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { EditableLabelState, EditCompletedEventArgs } from 'src/app/shared/components/editable-label/editable-label.component';
 
@@ -35,7 +35,7 @@ export class TestListComponent implements OnInit {
     }
   }
 
-  onTaskNameEditCompleted(event: EditCompletedEventArgs<string>, taskInfo: TaskInfo) {
+  onTaskNameEditCompleted(event: EditCompletedEventArgs<string>, taskInfo: TaskSummaryVm) {
     taskInfo.name = event.value;
     taskInfo.state = {
       value: event.value,
@@ -49,13 +49,13 @@ export class TestListComponent implements OnInit {
     this.sectionsVm[event.currentIndex] = tmp;
   }
 
-  moveTask(event: CdkDragDrop<TaskInfo[]>) {
+  moveTask(event: CdkDragDrop<TaskSummaryVm[]>) {
 
     if (event === undefined || event.item == undefined) {
       console.error("Unable to get dropping item data!");
       return;
     }
-    const tasks = event.item.data as TaskInfo[];
+    const tasks = event.item.data as TaskSummaryVm[];
     if (tasks === undefined || tasks.length === 0) {
       console.error("Dropping item data is incorrect!");
       return;

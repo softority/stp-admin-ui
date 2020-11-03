@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TaskInfo } from '../../../core/view-models';
+import { TaskSummaryVm } from '../../../core/view-models';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -19,7 +19,7 @@ export class TaskNameComponent implements OnInit {
   nameEditing: boolean = false;
 
   @Input()
-  taskInfo: TaskInfo;
+  taskInfo: TaskSummaryVm;
   
   applyNameEdit(event:Event){
     event.stopPropagation();

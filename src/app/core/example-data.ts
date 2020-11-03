@@ -1,9 +1,9 @@
 import { TaskSectionViewModel } from 'src/app/core/interfaces'
-import { TaskViewModel, Answer, MultichoiceTaskData} from 'src/app/core/view-models'
+import { TaskVm, MultichoiceTaskAnswerVm, MultichoiceTaskInfoVm} from 'src/app/core/view-models'
 import { TaskListComponent } from '../admin/task-list/task-list.component';
 import { TaskComplexity } from './data-contract';
 
-export const answers: Answer[] = [
+export const answers: MultichoiceTaskAnswerVm[] = [
   {id: 1, name: 'Addition will produce result 1.', isCorrect: false, state: {value: 'Addition will produce result 1.'}},
   {id: 2,name: 'Result of addition is system-dependent.', isCorrect: false, state: {value: 'Result of addition is system-dependent.'}},
   {id: 3, name: 'Program will generate run-time exception.', isCorrect: false, state: {value: 'Program will generate run-time exception.'}},
@@ -12,14 +12,14 @@ export const answers: Answer[] = [
 ];
 
 
-export const multichoiceData: MultichoiceTaskData = {
+export const multichoiceData: MultichoiceTaskInfoVm = {
   question: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   answers: answers
 }
 
 
 
-export const tasks: TaskViewModel[] = [
+export const tasks: TaskVm[] = [
   {
     header:
     {
@@ -77,7 +77,7 @@ export const tasks: TaskViewModel[] = [
     content: multichoiceData
   },
 ]
-export const tasks2: TaskViewModel[] = [
+export const tasks2: TaskVm[] = [
   {
     header:
     {
@@ -135,7 +135,7 @@ export const tasks2: TaskViewModel[] = [
     content: '_Content 4'
   },
 ]
-export const tasks3: TaskViewModel[] = [
+export const tasks3: TaskVm[] = [
   {
     header:
     {

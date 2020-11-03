@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TaskSummaryDto } from 'src/app/core/data-contract';
-import { TaskViewModel, TaskInfo, SkillVm } from 'src/app/core/view-models';
+import { TaskVm, TaskSummaryVm, SkillVm } from 'src/app/core/view-models';
 import { TaskService } from 'src/app/core/services/task.service';
 import { EditCompletedEventArgs, EditableLabelState } from 'src/app/shared/components/editable-label/editable-label.component';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
@@ -14,18 +14,18 @@ import { SkillsViewState } from '../skills-chips/skills-chips.component';
 export class TaskSummaryComponent implements OnInit {
 
   @Input()
-  set task(value: TaskInfo){
+  set task(value: TaskSummaryVm){
     this._task = value;
     this.nameStateTracker = new BehaviorSubject<EditableLabelState<string>>({value: this._task.name});
   }
-  get task(): TaskInfo{
+  get task(): TaskSummaryVm{
     return this._task;
   }
 
   skillsStateTracker: Subject<SkillsViewState> = new Subject<SkillsViewState>();
   nameStateTracker: BehaviorSubject<EditableLabelState<string>>;
 
-  private _task: TaskInfo;
+  private _task: TaskSummaryVm;
 
   constructor(public taskService: TaskService) {
   }
