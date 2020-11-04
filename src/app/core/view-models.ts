@@ -3,6 +3,7 @@ import { MultichoiceTaskAnswerDto, MultichoiceTaskInfoDto, TaskSummaryDto, TaskD
 import { TaskSectionViewModel as TaskSectionVm } from './interfaces';
 import { TreeItem } from '../shared/utils/arrayToTree';
 import { EditableLabelState } from '../shared/components/editable-label/editable-label.component';
+import { SlicePipe } from '@angular/common';
 
 export class TaskVm {
 
@@ -156,6 +157,14 @@ export class SkillVm {
                 console.error(`Unexpected SkillStatus: ${skill.status}`)
                 break;
         }
+        return res;
+    }
+
+    clone() : SkillVm{
+        const res = new SkillVm();
+        res.id = this.id;
+        res.name = this.name;
+        res.status = this.status;
         return res;
     }
 

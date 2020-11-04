@@ -70,9 +70,6 @@ export class TaskCategoryTreeComponent {
 
   /** Transform the data to something the tree can read. */
   transformer(node: TreeItem, level: number) {
-    //const children = this.dataSource.data.filter(x => x.parentId === node.id);
-    //const hasChildren = (children && children.length > 0);
-
     return {
       id: node.id,
       name: node.name,
@@ -100,9 +97,6 @@ export class TaskCategoryTreeComponent {
 
   /** Get the children for the node. */
   getChildren(node: TreeItem): TreeItem[] | null | undefined {
-    // if (!node)
-    //   return null;
-    //const res = this.dataSource.data.filter(x => x.parentId === node.id)    
     return node.children;
   }
 

@@ -26,8 +26,9 @@ export class SkillsChipsComponent implements OnInit, OnDestroy {
   set skills(value: SkillVm[]) {
     console.log(`SET SKILLS: ${JSON.stringify(value)}`);
     this._skills = value;
-    // TODO: implement SkillVm.clone
-    this._prevSkills = this._skills.map(x => Object.assign({}, x));
+    
+    //this._prevSkills = this._skills.map(x => Object.assign({}, x));
+    this._prevSkills = this._skills.map(x => x.clone());
   }
   get skills(): SkillVm[] {
     return this._skills;
