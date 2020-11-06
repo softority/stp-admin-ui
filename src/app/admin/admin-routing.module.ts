@@ -16,12 +16,14 @@ const routes: Routes = [
       { path: '', component: AdminDashboardComponent },
       {
         path: 'tests', component: TestsLayoutComponent,
+        data: {title: 'Tests'},
         children: [
           { path: ':id', component: TestListComponent }
         ]
       },
       {
         path: 'tasks', component: TaskLayoutComponent,
+        data: {title: 'Tasks'},
         children: [
           { path: ':id', component: TaskListComponent }
         ]
